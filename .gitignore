@@ -1,0 +1,84 @@
+# Flutter/Dart specific
+**/build/
+**/ios/Pods/
+**/android/.gradle/
+**/android/build/
+**/android/gradle/
+**/android/gradlew
+**/android/gradlew.bat
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/Flutter-Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+
+# Exclude local properties file
+**/android/local.properties
+
+# IDE-specific
+**/.idea/
+**/.vscode/
+
+# macOS-specific
+**/.DS_Store
+
+# Gradle specific
+**/*.iml
+**/*.lock
+**/gradle/
+**/gradlew
+**/gradlew.bat
+
+# IntelliJ-specific
+**/*.jks
+**/*.jks.properties
+
+# Android Studio Navigation editor temp files
+**/.navigation/
+
+# Log files
+**/*.log
+
+# Build artifacts
+**/*.apk
+**/*.ap_
+
+# Flutter SDK
+**/flutter/bin/cache/
+**/flutter/.packages
+**/flutter/packages/
+**/flutter/test/
+
+# macOS specific files
+**/ios/.symlinks/
+**/ios/Flutter/Flutter-Generated.xcconfig
+**/ios/Flutter/flutter_assets/
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+
+# Android Studio generated files
+**/android/app/*.iml
+**/android/app/build/
+
+# Android SDK configuration files
+**/android/app/gradle.properties
+**/android/gradle.properties
+**/android/gradle-wrapper.properties
+
+# Keystore files
+**/android/app/*.jks
+
+# Dart-specific
+**/*.dart_tool/
+
+# Cached artifacts
+**/.pub/
+**/.packages
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+
+# Test coverage directory
+**/coverage/
