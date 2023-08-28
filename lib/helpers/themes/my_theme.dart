@@ -1,5 +1,5 @@
+import 'package:app_name/helpers/resources/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:FlutterBoilerPlater/helpers/resources/colors.dart';
 
 class MyTheme {
   static ColorScheme lightColorScheme = ColorScheme.light(
@@ -12,7 +12,6 @@ class MyTheme {
     onSurface: Colors.white,
     onBackground: primaryColor,
     onError: primaryColor,
-
   );
 
   static ColorScheme darkColorScheme = ColorScheme.dark(

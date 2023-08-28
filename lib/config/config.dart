@@ -5,9 +5,9 @@ class AppConfig extends InheritedWidget {
 
   const AppConfig(
       {Key? key,
-        required this.flavorName,
-        required this.baseUrl,
-        required Widget child})
+      required this.flavorName,
+      required this.baseUrl,
+      required Widget child})
       : super(key: key, child: child);
 
   static AppConfig? of(BuildContext context) {

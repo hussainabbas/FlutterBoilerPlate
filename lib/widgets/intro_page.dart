@@ -28,17 +28,18 @@ class IntroPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(
-              bigText,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white,)
-            ),
-            const SizedBox(height: 10),
-            Text(
-              smallText,
+            Text(bigText,
                 textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white)
-            ),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                    )),
+            const SizedBox(height: 10),
+            Text(smallText,
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(color: Colors.white)),
           ],
         ),
       ),

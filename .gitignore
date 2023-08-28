@@ -63,10 +63,6 @@
 **/android/app/*.iml
 **/android/app/build/
 
-# Android SDK configuration files
-**/android/app/gradle.properties
-**/android/gradle.properties
-**/android/gradle-wrapper.properties
 
 # Keystore files
 **/android/app/*.jks

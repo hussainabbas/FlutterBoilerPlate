@@ -1,12 +1,12 @@
+import 'package:app_name/config/config.dart';
+import 'package:app_name/helpers/resources/routes_resources.dart';
+import 'package:app_name/helpers/themes/my_theme.dart';
+import 'package:app_name/helpers/utils/util_functions.dart';
+import 'package:app_name/screens/mobile/auth/getStarted/get_started_screen.dart';
+import 'package:app_name/screens/mobile/auth/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:FlutterBoilerPlater/config/config.dart';
-import 'package:FlutterBoilerPlater/helpers/resources/routes_resources.dart';
-import 'package:FlutterBoilerPlater/helpers/themes/my_theme.dart';
-import 'package:FlutterBoilerPlater/helpers/utils/util_functions.dart';
-import 'package:FlutterBoilerPlater/screens/auth/getStarted/get_started_screen.dart';
-import 'package:FlutterBoilerPlater/screens/auth/login/login_screen.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

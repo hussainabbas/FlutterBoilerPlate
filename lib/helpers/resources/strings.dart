@@ -1,3 +1,3 @@
 class StringResources {
-  static const String appName = 'FlutterBoilerPlater';
+  static const String app_name = 'app_name';
 }
