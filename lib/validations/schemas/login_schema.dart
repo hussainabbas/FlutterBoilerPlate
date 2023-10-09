@@ -1,5 +1,6 @@
-import 'package:app_name/validations/field.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:manawanui/validations/field.dart';
+
 part 'login_schema.freezed.dart';
 
 @freezed
@@ -10,5 +11,5 @@ class LoginSchema with _$LoginSchema {
   }) = _LoginSchema;
 
   factory LoginSchema.empty() =>
-      const LoginSchema(email: Field(value: ''), password: Field(value: ''));
+      LoginSchema(email: Field(value: ''), password: Field(value: ''));
 }

@@ -1,27 +1,28 @@
-import 'package:app_name/helpers/resources/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:manawanui/helpers/resources/colors.dart';
 
 class MyTheme {
   static ColorScheme lightColorScheme = ColorScheme.light(
-    primary: Colors.white,
-    secondary: primaryColor,
+    primary: AppColors.primaryColor,
+    secondary: AppColors.primaryColor,
     background: Colors.white,
-    error: primaryColor,
-    onPrimary: primaryColor,
-    onSecondary: Colors.white,
-    onSurface: Colors.white,
-    onBackground: primaryColor,
-    onError: primaryColor,
+    error: AppColors.primaryColor,
+    onPrimary: Colors.black,
+    onSecondary: Colors.blue,
+    onSurface: Colors.black,
+    onBackground: Colors.purple,
+    onError: Colors.white,
   );
 
   static ColorScheme darkColorScheme = ColorScheme.dark(
-    primary: primaryColor,
+    primary: AppColors.primaryColor,
     onPrimary: Colors.white,
     secondary: Colors.white,
-    onSecondary: primaryColor,
+    onSecondary: AppColors.primaryColor,
     onSurface: Colors.white,
-    error: primaryColor,
-    onError: primaryColor,
+    error: AppColors.primaryColor,
+    onError: AppColors.primaryColor,
   );
 
   static const TextTheme lightTextTheme = TextTheme(
@@ -85,13 +86,32 @@ class MyTheme {
     ),
   );
 
-  static final ThemeData lightTheme = ThemeData.from(
-    colorScheme: lightColorScheme,
-    textTheme: lightTextTheme,
+  // static final ThemeData lightTheme = ThemeData.from(
+  //   colorScheme: lightColorScheme,
+  //   textTheme: lightTextTheme,
+  // );
+  static final ThemeData darkTheme = ThemeData(
+    appBarTheme: AppBarTheme(
+      color: MyTheme.darkColorScheme.background, // Set the app bar color
+    ),
+    colorScheme: MyTheme.darkColorScheme,
+    textTheme: darkTextTheme,
+    // Other theme configurations...
   );
 
-  static final ThemeData darkTheme = ThemeData.from(
-    colorScheme: darkColorScheme,
-    textTheme: darkTextTheme,
-  );
+  static final ThemeData lightTheme = ThemeData(
+      appBarTheme: AppBarTheme(
+        color: MyTheme.lightColorScheme.background, // Set the app bar color
+      ),
+      colorScheme: MyTheme.lightColorScheme,
+      textTheme: lightTextTheme
+      // Other theme configurations...
+      );
+
+  static SystemUiOverlayStyle get systemUiOverlayStyle {
+    return SystemUiOverlayStyle(
+      statusBarColor: AppColors.primaryColor,
+      statusBarIconBrightness: Brightness.light,
+    );
+  }
 }

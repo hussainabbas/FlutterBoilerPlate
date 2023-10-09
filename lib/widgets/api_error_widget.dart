@@ -1,5 +1,5 @@
-import 'package:app_name/widgets/text_view.dart';
 import 'package:flutter/material.dart';
+import 'package:manawanui/widgets/text_view.dart';
 
 class ApiErrorWidget extends StatelessWidget {
   const ApiErrorWidget({Key? key, required String message})
@@ -10,13 +10,20 @@ class ApiErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: Center(
-        child: TextView(
-            text: _message,
-            textColor: Colors.red,
-            textFontWeight: FontWeight.normal,
-            fontSize: 12),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextView(
+              align: TextAlign.center,
+              text: _message,
+              textColor: Colors.red,
+              textFontWeight: FontWeight.normal,
+              fontSize: 12),
+        ],
       ),
     );
   }

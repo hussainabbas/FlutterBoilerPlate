@@ -1,5 +1,5 @@
-import 'package:app_name/helpers/resources/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:manawanui/helpers/resources/colors.dart';
 
 class CircularProgressWidget extends StatelessWidget {
   const CircularProgressWidget({Key? key}) : super(key: key);
@@ -9,7 +9,7 @@ class CircularProgressWidget extends StatelessWidget {
     return RepaintBoundary(
       child: SizedBox(
         child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(primaryColor)),
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryColor)),
       ),
     );
   }

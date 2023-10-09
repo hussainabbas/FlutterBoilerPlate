@@ -1,18 +1,18 @@
 class GenericResponse {
-  int? status;
+  bool? status;
   String? message;
 
   GenericResponse({this.status, this.message});
 
   GenericResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
+    status = json['Status'];
+    message = json['Message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['message'] = message;
+    data['Status'] = status;
+    data['Message'] = message;
     return data;
   }
 }

@@ -1,8 +1,8 @@
-import 'package:app_name/core/providers/app_form_state.dart';
-import 'package:app_name/helpers/extension/validator_extension.dart';
-import 'package:app_name/validations/field.dart';
-import 'package:app_name/validations/schemas/login_schema.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:manawanui/core/providers/app_form_state.dart';
+import 'package:manawanui/helpers/extension/validator_extension.dart';
+import 'package:manawanui/validations/field.dart';
+import 'package:manawanui/validations/schemas/login_schema.dart';
 
 final loginFormProviderNotifier =
     StateNotifierProvider<LoginFormProvider, AppFormState<LoginSchema>>((ref) {

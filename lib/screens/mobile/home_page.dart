@@ -1,7 +1,6 @@
-import 'package:app_name/config/config.dart';
-import 'package:app_name/widgets/responsive_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:manawanui/config/config.dart';
+import 'package:manawanui/widgets/responsive_widget.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

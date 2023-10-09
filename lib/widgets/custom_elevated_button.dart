@@ -1,5 +1,5 @@
-import 'package:app_name/helpers/resources/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:manawanui/helpers/resources/colors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({
@@ -40,7 +40,7 @@ class CustomElevatedButton extends StatelessWidget {
               ),
               foregroundColor: Colors.white,
               backgroundColor: _backgroundColor ??
-                  primaryColor // Set the background color here
+                  AppColors.primaryColor // Set the background color here
               ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),

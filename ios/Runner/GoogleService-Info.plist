@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1081762225832-lvots6ubackamjlc3dvjrgq8plfb9fad.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1081762225832-lvots6ubackamjlc3dvjrgq8plfb9fad</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCa6Qg64KANFmgArEtGIZDU5wYvSRb7OUQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1081762225832</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ifisol.Manawanui</string>
+	<key>PROJECT_ID</key>
+	<string>manawanui-in-charge-limited</string>
+	<key>STORAGE_BUCKET</key>
+	<string>manawanui-in-charge-limited.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1081762225832:ios:4198b1c1608d0421</string>
+	<key>DATABASE_URL</key>
+	<string>https://manawanui-in-charge-limited.firebaseio.com</string>
+</dict>
+</plist>

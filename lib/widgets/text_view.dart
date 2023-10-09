@@ -8,6 +8,7 @@ class TextView extends StatelessWidget {
       required FontWeight textFontWeight,
       required double fontSize,
       bool isEllipsis = false,
+      this.isUnderLine,
       TextAlign? align})
       : _text = text,
         _textColor = textColor,
@@ -23,6 +24,7 @@ class TextView extends StatelessWidget {
   final double _fontSize;
   final TextAlign? _align;
   final bool _isEllipsis;
+  final bool? isUnderLine;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +33,12 @@ class TextView extends StatelessWidget {
       overflow: _isEllipsis ? TextOverflow.ellipsis : null,
       softWrap: true,
       style: TextStyle(
-        fontFamily: 'Century',
+        fontFamily: 'Avenir',
         fontSize: _fontSize,
         color: _textColor,
+        decoration: isUnderLine ?? false
+            ? TextDecoration.underline
+            : TextDecoration.none,
         fontWeight: _textFontWeight,
       ),
       textHeightBehavior:

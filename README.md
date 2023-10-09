@@ -1,4 +1,4 @@
-# app_name
+# manawanui
 
 A new Flutter project.
 

@@ -1,6 +1,6 @@
 {
-  "name": "app_name",
-  "short_name": "app_name",
+  "name": "manawanui",
+  "short_name": "manawanui",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",
