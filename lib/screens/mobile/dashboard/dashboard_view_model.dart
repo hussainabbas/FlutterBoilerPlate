@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:manawanui/core/network/api_result.dart';
 import 'package:manawanui/data/models/get_category_support_plan_response.dart';
+import 'package:manawanui/data/models/get_employer_client_list_response.dart';
 import 'package:manawanui/data/models/get_funding_support_plan_start_date_response.dart';
 import 'package:manawanui/data/models/get_mail_count_response.dart';
 import 'package:manawanui/data/models/get_statement_new_response.dart';
@@ -27,6 +28,13 @@ class DashboardViewModel {
   Stream<ApiResult<GetStatementNewResponse>>
       get responseGetStatementNewStream =>
           _responseGetStatementNewController.stream;
+
+  final _responseGetEmployerClientListController =
+      StreamController<ApiResult<GetEmployerClientListResponse>>.broadcast();
+
+  Stream<ApiResult<GetEmployerClientListResponse>>
+      get responseGetEmployerClientListStream =>
+          _responseGetEmployerClientListController.stream;
 
   final _responseGetCategorySupportPlanListController =
       StreamController<ApiResult<GetCategorySupportPlanResponse>>.broadcast();
@@ -64,6 +72,18 @@ class DashboardViewModel {
     }
   }
 
+  Future<void> getEmployerClientList(Map<String, dynamic> body) async {
+    try {
+      final response = await _repository.getEmployeeClientList(body);
+      _responseGetEmployerClientListController.sink.add(response);
+    } catch (e) {
+      console('getEmployerClientList - Error fetching data: $e');
+      _responseGetEmployerClientListController.sink.add(
+          ApiResult<GetEmployerClientListResponse>(
+              error: 'Failed to load data: $e'));
+    }
+  }
+
   Future<void> getCategorySupportPlanList(Map<String, dynamic> body) async {
     try {
       final response = await _repository.getCategorySupportPlanList(body);
@@ -91,6 +111,7 @@ class DashboardViewModel {
   void dispose() {
     _responseGetMailCountController.close();
     _responseGetStatementNewController.close();
+    _responseGetEmployerClientListController.close();
     _responseGetCategorySupportPlanListController.close();
     _responseGetFundingSupportPlanStartDateController.close();
   }

@@ -12,6 +12,7 @@ class Routes {
   static const String ADD_EDIT_TIMESHEET = 'addTimesheet';
   static const String ADD_EDIT_PAYEE = 'addPayee';
   static const String ADD_VIEW_MAIL_SCREEN = 'addMail';
+  static const String SEARCH_ADDRESS_SCREEN = 'searchAddress';
 
   //DASHBOARD-MENU
   static const String STATEMENT = 'statement';

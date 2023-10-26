@@ -86,6 +86,7 @@ class CustomTextField extends ConsumerWidget {
       this.isContainBottomBorder,
       required this.onChanged,
       this.errorMessage,
+      this.keyboardType,
       this.obscure})
       : super(key: key);
 
@@ -96,6 +97,7 @@ class CustomTextField extends ConsumerWidget {
   final Icon? prefixIcon;
   final bool? isContainBottomBorder;
   final ValueChanged<String> onChanged;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -108,6 +110,7 @@ class CustomTextField extends ConsumerWidget {
             return TextField(
               controller: controller,
               onChanged: onChanged,
+              keyboardType: keyboardType ?? TextInputType.text,
               decoration: InputDecoration(
                 labelText: title,
                 hintStyle: const TextStyle(fontSize: 12),

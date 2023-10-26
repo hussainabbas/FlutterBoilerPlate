@@ -6,8 +6,7 @@ import 'package:manawanui/core/network/api_result.dart';
 import 'package:manawanui/core/providers/auth_providers.dart';
 import 'package:manawanui/core/providers/common_providers.dart';
 import 'package:manawanui/core/providers/dashboard_providers.dart';
-import 'package:manawanui/data/models/funder_model.dart';
-import 'package:manawanui/data/models/funder_start_date_model.dart';
+import 'package:manawanui/data/models/get_employee_payee_initials_response.dart';
 import 'package:manawanui/data/models/get_statement_new_response.dart';
 import 'package:manawanui/data/models/statement_model.dart';
 import 'package:manawanui/helpers/extension/context_function.dart';
@@ -18,6 +17,7 @@ import 'package:manawanui/helpers/resources/colors.dart';
 import 'package:manawanui/helpers/utils/util_functions.dart';
 import 'package:manawanui/screens/modals/bottom_sheet_choose_funder_name_modal.dart';
 import 'package:manawanui/screens/modals/bottom_sheet_choose_funder_start_date_modal.dart';
+import 'package:manawanui/screens/modals/bottom_sheet_choose_general_modal.dart';
 import 'package:manawanui/widgets/api_error_widget.dart';
 import 'package:manawanui/widgets/overview_widget.dart';
 import 'package:manawanui/widgets/section_body.dart';
@@ -34,8 +34,9 @@ class StatementMenuScreen extends HookConsumerWidget {
     final userDetails = ref.watch(userDetailsProvider);
     final currencySymbol = ref.watch(currencySymbolProvider);
     final apiClient = ref.watch(apiClientProvider).value;
-    late FunderModel? selectedCategorySupportPlanItem;
-    late FunderStartDateModel? selectedFunderStartDateModel;
+    late GenericIdValueModel? selectedCategorySupportPlanItem;
+    late GenericIdValueModel? selectedClientIdModel;
+    late GenericIdValueModel? selectedFunderStartDateModel;
 
     useEffect(() {
       setGlobalHeaders(userDetails, apiClient);
@@ -46,6 +47,37 @@ class StatementMenuScreen extends HookConsumerWidget {
       });
       return null;
     }, []);
+
+    useEffect(() {
+      final subscription = viewModel.responseGetEmployerClientListStream
+          .listen((response) async {
+        if (response.data?.status == true) {
+          BottomSheetChooseGeneralModal.show(
+              context,
+              "Choose Client Name",
+              response.data?.response,
+              selectedClientIdModel!,
+              userDetails, (value) async {
+            if (context.mounted) context.showProgressDialog();
+            await viewModel.getStatementNew({
+              ApiParamKeys.KEY_USER_ID_SMALL: userDetails?.userId ?? "",
+              ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
+              ApiParamKeys.KEY_IS_SELF_MANAGED:
+                  userDetails?.isSelfManaged ?? false,
+              ApiParamKeys.KEY_CLIENT_ID: value?.id ?? ""
+            });
+            if (context.mounted) {
+              context.pop();
+            }
+          });
+        } else {
+          context
+              .showErrorDialog(response.data?.message ?? response.error ?? "");
+        }
+      });
+
+      return subscription.cancel;
+    }, const []);
 
     useEffect(() {
       final subscription = viewModel.responseGetCategorySupportPlanListStream
@@ -199,9 +231,29 @@ class StatementMenuScreen extends HookConsumerWidget {
                       height: 16,
                     ),
                     SectionBody(
-                        leadingIcon: Icons.person_pin,
-                        title: "Client Name",
-                        value: data?.response?.client?.name ?? ""),
+                      leadingIcon: Icons.person_pin,
+                      title: "Client Name",
+                      trailingIcon: Icons.navigate_next_rounded,
+                      value: data?.response?.client?.name ?? "",
+                      callbackAction: () async {
+                        selectedClientIdModel = data?.response?.client;
+                        if (context.mounted) {
+                          context.showProgressDialog();
+                        }
+                        await viewModel.getEmployerClientList({
+                          ApiParamKeys.KEY_USER_ID_SMALL:
+                              userDetails?.userId ?? "",
+                          ApiParamKeys.KEY_EMPLOYER_ID:
+                              userDetails?.employerId ?? "",
+                          ApiParamKeys.KEY_SUPPORT_PLAN_ID:
+                              data?.response?.supportPlanId ?? "",
+                        });
+                        if (context.mounted) {
+                          // Navigator.pop(context);
+                          context.pop();
+                        }
+                      },
+                    ),
                     //FUNDER
                     const SizedBox(
                       height: 32,
@@ -261,8 +313,6 @@ class StatementMenuScreen extends HookConsumerWidget {
                               callbackAction: () async {
                                 selectedFunderStartDateModel =
                                     data?.response?.funderStartDate;
-                                console(
-                                    "selectedFunderStartDateModel -> ${selectedFunderStartDateModel?.id}");
                                 if (context.mounted) {
                                   context.showProgressDialog();
                                 }
@@ -275,10 +325,8 @@ class StatementMenuScreen extends HookConsumerWidget {
                                       data?.response?.supportPlanId ?? "",
                                 });
                                 if (context.mounted) {
-                                  // Navigator.pop(context);
                                   context.pop();
                                 }
-                                //BottomSheetChooseFunderModal.show(context);
                               },
                               value: data?.response?.funderStartDate?.name
                                       ?.convertStringDateToMMMDDYYY() ??

@@ -18,11 +18,16 @@ class Assets {
   static const String dashboardMenuRemindersMenuScreen = 'lib/screens/mobile/dashboard/dashboard_menu/reminders_menu_screen.dart';
   static const String dashboardMenuStatementMenuScreen = 'lib/screens/mobile/dashboard/dashboard_menu/statement_menu_screen.dart';
   static const String dashboardMenuTimesheetMenuScreen = 'lib/screens/mobile/dashboard/dashboard_menu/timesheet_menu_screen.dart';
+  static const String enumsDocumentType = 'lib/helpers/enums/document_type.dart';
+  static const String enumsFieldType = 'lib/helpers/enums/field_type.dart';
+  static const String enumsPayeesType = 'lib/helpers/enums/payees_type.dart';
   static const String enumsUserType = 'lib/helpers/enums/user_type.dart';
   static const String extensionContextFunction = 'lib/helpers/extension/context_function.dart';
   static const String extensionDateTimeFunctions = 'lib/helpers/extension/date_time_functions.dart';
   static const String extensionStringExtensions = 'lib/helpers/extension/string_extensions.dart';
+  static const String extensionTextEditingControllerFunctions = 'lib/helpers/extension/text_editing_controller_functions.dart';
   static const String extensionValidatorExtension = 'lib/helpers/extension/validator_extension.dart';
+  static const String extensionWidgetRefFunctions = 'lib/helpers/extension/widget_ref_functions.dart';
   static const String fontsCenturyGothic = 'assets/fonts/CenturyGothic.ttf';
   static const String generatedAssets = 'lib/generated/assets.dart';
   static const String getStartedGetStartedBloc = 'lib/screens/mobile/auth/getStarted/get_started_bloc.dart';
@@ -67,6 +72,9 @@ class Assets {
   static const String mobileHomePage = 'lib/screens/mobile/home_page.dart';
   static const String modalsBottomSheetChooseFunderNameModal = 'lib/screens/modals/bottom_sheet_choose_funder_name_modal.dart';
   static const String modalsBottomSheetChooseFunderStartDateModal = 'lib/screens/modals/bottom_sheet_choose_funder_start_date_modal.dart';
+  static const String modalsBottomSheetChooseGeneralModal = 'lib/screens/modals/bottom_sheet_choose_general_modal.dart';
+  static const String modalsBottomSheetPickDocument = 'lib/screens/modals/bottom_sheet_pick_document.dart';
+  static const String modalsCustomDatePicker = 'lib/screens/modals/custom_date_picker.dart';
   static const String modelsClientModel = 'lib/data/models/client_model.dart';
   static const String modelsDrawerItem = 'lib/data/models/drawer_item.dart';
   static const String modelsDynamicsStatementModel = 'lib/data/models/dynamics_statement_model.dart';
@@ -77,8 +85,12 @@ class Assets {
   static const String modelsGetBudgetNewResponse = 'lib/data/models/get_budget_new_response.dart';
   static const String modelsGetCategorySupportPlanResponse = 'lib/data/models/get_category_support_plan_response.dart';
   static const String modelsGetEmployByResponse = 'lib/data/models/get_employ_by_response.dart';
+  static const String modelsGetEmployeeDocumentsResponse = 'lib/data/models/get_employee_documents_response.dart';
+  static const String modelsGetEmployeePayeeInitialsResponse = 'lib/data/models/get_employee_payee_initials_response.dart';
   static const String modelsGetFundingSupportPlanStartDateResponse = 'lib/data/models/get_funding_support_plan_start_date_response.dart';
   static const String modelsGetMailCountResponse = 'lib/data/models/get_mail_count_response.dart';
+  static const String modelsGetNzAddressesResponse = 'lib/data/models/get_nz_addresses_response.dart';
+  static const String modelsGetNzPostAuthTokenResponse = 'lib/data/models/get_nz_post_auth_token_response.dart';
   static const String modelsGetStatementNewResponse = 'lib/data/models/get_statement_new_response.dart';
   static const String modelsLoginResponse = 'lib/data/models/login_response.dart';
   static const String modelsPayeesResponse = 'lib/data/models/payees_response.dart';
@@ -93,11 +105,21 @@ class Assets {
   static const String navigationsMyRouterInformationParser = 'lib/navigations/my_router_information_parser.dart';
   static const String navigationsMyRouterPath = 'lib/navigations/my_router_path.dart';
   static const String networkApiClient = 'lib/core/network/api_client.dart';
+  static const String networkApiClientNzPost = 'lib/core/network/api_client_nz_post.dart';
+  static const String networkApiClientNzSearch = 'lib/core/network/api_client_nz_search.dart';
   static const String networkApiEndpoints = 'lib/core/network/api_endpoints.dart';
   static const String networkApiResult = 'lib/core/network/api_result.dart';
   static const String networkNetworkOperations = 'lib/core/network/network_operations.dart';
+  static const String networkNetworkOperationsHeaders = 'lib/core/network/network_operations_headers.dart';
+  static const String payeeWidgetsPayeeDobWidget = 'lib/widgets/payee_widgets/payee_dob_widget.dart';
+  static const String payeeWidgetsPayeeNameWidget = 'lib/widgets/payee_widgets/payee_name_widget.dart';
+  static const String payeeWidgetsPayeesGenderKnownAsWidget = 'lib/widgets/payee_widgets/payees_gender_known_as_widget.dart';
+  static const String payeeWidgetsPayeesPayrollInfoWidget = 'lib/widgets/payee_widgets/payees_payroll_info_widget.dart';
   static const String payeesAddEditPayee = 'lib/screens/mobile/dashboard/payees/add_edit_payee.dart';
+  static const String payeesNzPostViewModel = 'lib/screens/mobile/dashboard/payees/nz_post_view_model.dart';
+  static const String payeesNzSearchViewModel = 'lib/screens/mobile/dashboard/payees/nz_search_view_model.dart';
   static const String payeesPayeesViewModel = 'lib/screens/mobile/dashboard/payees/payees_view_model.dart';
+  static const String payeesSearchAddressScreen = 'lib/screens/mobile/dashboard/payees/search_address_screen.dart';
   static const String providersAppFormState = 'lib/core/providers/app_form_state.dart';
 
   static const String
@@ -122,6 +144,10 @@ class Assets {
   static const String providersTimesheetProviders = 'lib/core/providers/timesheet_providers.dart';
   static const String repositoryRepository = 'lib/data/repository/repository.dart';
   static const String repositoryRepositoryImpl = 'lib/data/repository/repository_impl.dart';
+  static const String repositoryRepositoryNz = 'lib/data/repository/repository_nz.dart';
+  static const String repositoryRepositoryNzImpl = 'lib/data/repository/repository_nz_impl.dart';
+  static const String repositoryRepositoryNzSearch = 'lib/data/repository/repository_nz_search.dart';
+  static const String repositoryRepositoryNzSearchImpl = 'lib/data/repository/repository_nz_search_impl.dart';
   static const String resourcesApiParamKeys = 'lib/helpers/resources/api_param_keys.dart';
   static const String resourcesAppPreferenceResources = 'lib/helpers/resources/app_preference_resources.dart';
   static const String resourcesColors = 'lib/helpers/resources/colors.dart';
@@ -170,11 +196,13 @@ class Assets {
   static const String widgetsDataChooseWidget = 'lib/widgets/data_choose_widget.dart';
   static const String widgetsDataSwitchWidget = 'lib/widgets/data_switch_widget.dart';
   static const String widgetsDataTextInputWidget = 'lib/widgets/data_text_input_widget.dart';
+  static const String widgetsDocumentFormWidget = 'lib/widgets/document_form_widget.dart';
   static const String widgetsDottedLinePainter = 'lib/widgets/dotted_line_painter.dart';
   static const String widgetsFixedWidthColumn = 'lib/widgets/fixed_width_column.dart';
   static const String widgetsIconButton = 'lib/widgets/icon_button.dart';
   static const String widgetsIntroPage = 'lib/widgets/intro_page.dart';
   static const String widgetsMyDrawer = 'lib/widgets/my_drawer.dart';
+  static const String widgetsNoPayeeSelectedWidget = 'lib/widgets/no_payee_selected_widget.dart';
   static const String widgetsOverviewWidget = 'lib/widgets/overview_widget.dart';
   static const String widgetsPayeeTypeWidget = 'lib/widgets/payee_type_widget.dart';
   static const String widgetsResponsiveWidget = 'lib/widgets/responsive_widget.dart';

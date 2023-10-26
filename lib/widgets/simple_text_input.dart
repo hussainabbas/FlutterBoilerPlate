@@ -7,13 +7,21 @@ class SimpleTextField extends StatelessWidget {
       required this.controller,
       required this.onChanged,
       required this.isEditable,
+      this.textInputType,
+      this.maxLength,
+      this.hint,
+      this.focusNode,
       this.errorMessage})
       : super(key: key);
 
   final TextEditingController controller;
   final String? errorMessage;
   final bool isEditable;
+  final TextInputType? textInputType;
   final ValueChanged<String> onChanged;
+  final int? maxLength;
+  final String? hint;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +32,9 @@ class SimpleTextField extends StatelessWidget {
           TextField(
             enabled: isEditable,
             textAlign: TextAlign.center,
+            keyboardType: textInputType,
+            focusNode: focusNode,
+            maxLength: maxLength,
             style: TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryColor,
@@ -31,10 +42,11 @@ class SimpleTextField extends StatelessWidget {
                 fontFamily: 'Avenir'),
             controller: controller,
             onChanged: onChanged,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               border: InputBorder.none, // Remove the border
-              hintText: 'empty', // No hint text
-              contentPadding: EdgeInsets.all(0), // No padding
+              hintText: hint ?? 'empty', // No hint text
+              counterText: '',
+              contentPadding: const EdgeInsets.all(0), // No padding
             ),
           ),
 

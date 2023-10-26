@@ -1,3 +1,5 @@
+import 'package:image_picker/image_picker.dart';
+
 class GetEmployByResponse {
   bool? status;
   String? message;
@@ -8,9 +10,9 @@ class GetEmployByResponse {
   GetEmployByResponse(
       {this.status,
       this.message,
-      this.totalPage,
-      this.isThirdPartyPaymentAllowed,
-      this.response});
+    this.totalPage,
+    this.isThirdPartyPaymentAllowed,
+    this.response});
 
   GetEmployByResponse.fromJson(Map<String, dynamic> json) {
     status = json['Status'];
@@ -113,80 +115,79 @@ class EmployByModel {
   String? terminationPayOutLieu;
   String? terminationPayOutAnnual;
 
-  EmployByModel(
-      {this.employeeId,
-      this.employerId,
-      this.employeeCode,
-      this.userId,
-      this.thirdPartyProviderId,
-      this.employmentStatusContentListId,
-      this.employmentStatusContentList,
-      this.regionContentListId,
-      this.regionContentList,
-      this.employeeTypeCode,
-      this.employeeTypeDisplay,
-      this.isAgent,
-      this.supportingDisplay,
-      this.employeeStatusCode,
-      this.employeeStatusName,
-      this.emailPayslipCode,
-      this.emailPayslipDisplay,
-      this.address1,
-      this.address2,
-      this.city,
-      this.inviteToPortal,
-      this.privacyNoticeChecked,
-      this.fullName,
-      this.fullAddress,
-      this.firstName,
-      this.lastName,
-      this.knownAs,
-      this.dateofBirth,
-      this.genderContentListId,
-      this.genderContentList,
-      this.titleContentListId,
-      this.titleContentList,
-      this.email,
-      this.irdNumber,
-      this.isAgentEmployee,
-      this.homePhone,
-      this.workPhone,
-      this.mobilePhone,
-      this.occupation,
-      this.taxCodeContentListId,
-      this.taxCodeContentList,
-      this.kiwiSaverContentListId,
-      this.kiwiSaverContentList,
-      this.leaveEntitlementContentListId,
-      this.leaveEntitlementContentList,
-      this.startDate,
-      this.hasKiwiSaver,
-      this.childSupportAmount,
-      this.bankSuffix,
-      this.bankCompany,
-      this.bankAccountNumber,
-      this.bankBranch,
-      this.fullBankAccountNumber,
-      this.standardPayRate,
-      this.nightPayRate,
-      this.weekendPayRate,
-      this.documents,
-      this.documentType,
-      this.paySlip,
-      this.effectiveDate,
-      this.isSelfManaged,
-      this.withholdingTaxRate,
-      this.gstRegistered,
-      this.payGroup,
-      this.datapayCompany,
-      this.terminationDate,
-      this.terminationReasonContentListId,
-      this.terminationReasonDisplay,
-      this.terminationComments,
-      this.terminationContinuePayUntilDate,
-      this.terminationPayOutHoliday,
-      this.terminationPayOutLieu,
-      this.terminationPayOutAnnual});
+  EmployByModel({this.employeeId,
+    this.employerId,
+    this.employeeCode,
+    this.userId,
+    this.thirdPartyProviderId,
+    this.employmentStatusContentListId,
+    this.employmentStatusContentList,
+    this.regionContentListId,
+    this.regionContentList,
+    this.employeeTypeCode,
+    this.employeeTypeDisplay,
+    this.isAgent,
+    this.supportingDisplay,
+    this.employeeStatusCode,
+    this.employeeStatusName,
+    this.emailPayslipCode,
+    this.emailPayslipDisplay,
+    this.address1,
+    this.address2,
+    this.city,
+    this.inviteToPortal,
+    this.privacyNoticeChecked,
+    this.fullName,
+    this.fullAddress,
+    this.firstName,
+    this.lastName,
+    this.knownAs,
+    this.dateofBirth,
+    this.genderContentListId,
+    this.genderContentList,
+    this.titleContentListId,
+    this.titleContentList,
+    this.email,
+    this.irdNumber,
+    this.isAgentEmployee,
+    this.homePhone,
+    this.workPhone,
+    this.mobilePhone,
+    this.occupation,
+    this.taxCodeContentListId,
+    this.taxCodeContentList,
+    this.kiwiSaverContentListId,
+    this.kiwiSaverContentList,
+    this.leaveEntitlementContentListId,
+    this.leaveEntitlementContentList,
+    this.startDate,
+    this.hasKiwiSaver,
+    this.childSupportAmount,
+    this.bankSuffix,
+    this.bankCompany,
+    this.bankAccountNumber,
+    this.bankBranch,
+    this.fullBankAccountNumber,
+    this.standardPayRate,
+    this.nightPayRate,
+    this.weekendPayRate,
+    this.documents,
+    this.documentType,
+    this.paySlip,
+    this.effectiveDate,
+    this.isSelfManaged,
+    this.withholdingTaxRate,
+    this.gstRegistered,
+    this.payGroup,
+    this.datapayCompany,
+    this.terminationDate,
+    this.terminationReasonContentListId,
+    this.terminationReasonDisplay,
+    this.terminationComments,
+    this.terminationContinuePayUntilDate,
+    this.terminationPayOutHoliday,
+    this.terminationPayOutLieu,
+    this.terminationPayOutAnnual});
 
   EmployByModel.fromJson(Map<String, dynamic> json) {
     employeeId = json['EmployeeId'];
@@ -374,6 +375,8 @@ class DocumentsModel {
   String? employeeDocumentTypeName;
   String? employeeName;
   String? employerId;
+  bool? isPicked = false;
+  XFile? selectedFile;
 
   DocumentsModel(
       {this.employeeDocumentId,
@@ -384,7 +387,9 @@ class DocumentsModel {
       this.employeeDocumentTypeId,
       this.employeeDocumentTypeName,
       this.employeeName,
-      this.employerId});
+      this.employerId,
+      this.isPicked,
+      this.selectedFile});
 
   DocumentsModel.fromJson(Map<String, dynamic> json) {
     employeeDocumentId = json['EmployeeDocumentId'];
@@ -424,16 +429,15 @@ class DocumentTypeModel {
   bool? expired;
   String? helpText;
 
-  DocumentTypeModel(
-      {this.employeeDocumentTypeId,
-      this.name,
-      this.urlLink,
-      this.employeeTypeCode,
-      this.employeeTypeDisplay,
-      this.listOrder,
-      this.mandatory,
-      this.expired,
-      this.helpText});
+  DocumentTypeModel({this.employeeDocumentTypeId,
+    this.name,
+    this.urlLink,
+    this.employeeTypeCode,
+    this.employeeTypeDisplay,
+    this.listOrder,
+    this.mandatory,
+    this.expired,
+    this.helpText});
 
   DocumentTypeModel.fromJson(Map<String, dynamic> json) {
     employeeDocumentTypeId = json['EmployeeDocumentTypeId'];
@@ -472,15 +476,14 @@ class PaySlipModel {
   String? employerId;
   String? employerDisplay;
 
-  PaySlipModel(
-      {this.payslipId,
-      this.payRunId,
-      this.employeeId,
-      this.periodEndDate,
-      this.directCredit,
-      this.payload,
-      this.employerId,
-      this.employerDisplay});
+  PaySlipModel({this.payslipId,
+    this.payRunId,
+    this.employeeId,
+    this.periodEndDate,
+    this.directCredit,
+    this.payload,
+    this.employerId,
+    this.employerDisplay});
 
   PaySlipModel.fromJson(Map<String, dynamic> json) {
     payslipId = json['PayslipId'];

@@ -6,13 +6,13 @@ import 'package:manawanui/core/network/api_result.dart';
 import 'package:manawanui/core/providers/auth_providers.dart';
 import 'package:manawanui/core/providers/payee_providers.dart';
 import 'package:manawanui/data/models/get_employ_by_response.dart';
+import 'package:manawanui/data/models/get_employee_documents_response.dart';
 import 'package:manawanui/helpers/resources/api_param_keys.dart';
 import 'package:manawanui/helpers/resources/routes_resources.dart';
 import 'package:manawanui/helpers/utils/util_functions.dart';
 import 'package:manawanui/widgets/api_error_widget.dart';
 import 'package:manawanui/widgets/fixed_width_column.dart';
 import 'package:manawanui/widgets/payee_type_widget.dart';
-
 class PayeesMenuScreen extends HookConsumerWidget {
   const PayeesMenuScreen({super.key});
 
@@ -27,30 +27,27 @@ class PayeesMenuScreen extends HookConsumerWidget {
     List<EmployByModel> list = [];
     List<EmployByModel> filteredList = [];
 
-    useEffect(() {
+    void getEmployBy(int page) {
       viewModel.getEmployBy({
         ApiParamKeys.KEY_USER_ID_SMALL: userDetails?.userId ?? "",
         ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
         ApiParamKeys.KEY_IS_SELF_MANAGED: userDetails?.isSelfManaged ?? "",
-        ApiParamKeys.KEY_PAGE_NO: pageNo,
+        ApiParamKeys.KEY_PAGE_NO: page,
       });
+    }
+
+    useEffect(() {
+      getEmployBy(pageNo);
       return null;
     }, []);
 
     useEffect(() {
       void onScroll() {
-        console("onScroll -> $totalPages - $pageNo");
         if (scrollController.position.pixels ==
             scrollController.position.maxScrollExtent) {
           if (pageNo < totalPages) {
             pageNo++;
-            viewModel.getEmployBy({
-              ApiParamKeys.KEY_USER_ID_SMALL: userDetails?.userId ?? "",
-              ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
-              ApiParamKeys.KEY_IS_SELF_MANAGED:
-                  userDetails?.isSelfManaged ?? "",
-              ApiParamKeys.KEY_PAGE_NO: pageNo,
-            });
+            getEmployBy(pageNo);
           }
         }
       }
@@ -61,6 +58,32 @@ class PayeesMenuScreen extends HookConsumerWidget {
         scrollController.removeListener(onScroll);
       };
     }, [pageNo]);
+
+    useEffect(() {
+      final subscription =
+          viewModel.responseGetEmployByStream.listen((response) async {
+        if (response.error != null) {
+          if (response.error?.contains("401") == true) {
+            logout(ref, context);
+
+            return;
+          }
+        }
+        if (response.data?.status == true) {
+          final data = response.data;
+          totalPages = data?.totalPage ?? 0;
+          if (pageNo == 1) {
+            // filteredList.clear();
+            list = data!.response!;
+          } else {
+            list.addAll(data!.response!);
+          }
+          filteredList = list;
+        }
+      });
+
+      return subscription.cancel;
+    }, [viewModel.responseGetEmployByStream]);
 
     void filterData(String query) {
       // filteredList.clear();
@@ -73,37 +96,48 @@ class PayeesMenuScreen extends HookConsumerWidget {
       // }
     }
 
-    return StreamBuilder<ApiResult<GetEmployByResponse>>(
-      stream: viewModel.responseGetEmployByStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(
-              child: ApiErrorWidget(message: snapshot.error.toString()));
-        }
-        if (snapshot.hasData) {
-          final response = snapshot.data;
-          final data = response?.data;
-          totalPages = data?.totalPage ?? 0;
-
-          if (response?.error != null) {
-            if (response?.error?.contains("401") == true) {
-              logout(ref, context);
-            }
-            return Center(
-                child: ApiErrorWidget(
-                    message: response?.data?.message.toString() ?? ""));
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //Navigator.pushNamed(context, Routes.ADD_EDIT_PAYEE);
+          ref.watch(isPayeeEditingProvider.notifier).state = true;
+          context.go("${Routes.HOME_ROUTE}/${Routes.ADD_EDIT_PAYEE}");
+          //context.push(Routes.ADD_EDIT_PAYEE);
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
+      body: StreamBuilder<ApiResult<GetEmployByResponse>>(
+        stream: viewModel.responseGetEmployByStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
+          if (snapshot.hasError) {
+            return Center(
+                child: ApiErrorWidget(message: snapshot.error.toString()));
+          }
+          if (snapshot.hasData) {
+            final response = snapshot.data;
+            final data = response?.data;
+            totalPages = data?.totalPage ?? 0;
 
-          if (response?.data?.status == true) {
-            list = [...list, ...?data?.response];
-            filteredList.addAll(list);
-            // filteredList.sort((a, b) => a.employeeStatusName!.compareTo(b.employeeStatusName ?? ""));
-            return Scaffold(
-              backgroundColor: Colors.grey.shade200,
-              body: Column(
+            if (response?.error != null) {
+              if (response?.error?.contains("401") == true) {
+                logout(ref, context);
+              }
+              return Center(
+                  child: ApiErrorWidget(
+                      message: response?.data?.message.toString() ?? ""));
+            }
+
+            if (response?.data?.status == true) {
+              // list = [...list, ...?data?.response];
+              //filteredList.addAll(data!.response!);
+              //filteredList.sort((a, b) => a.fullName!.compareTo(b.fullName ?? ""));
+              return Column(
                 children: [
                   Container(
                     padding: const EdgeInsets.fromLTRB(16.0, 16, 16, 0),
@@ -131,11 +165,6 @@ class PayeesMenuScreen extends HookConsumerWidget {
                       ],
                     ),
                   ),
-                  // const Divider(
-                  //   color: Colors.grey,
-                  //   thickness: 0.6,
-                  // ),
-
                   Container(
                     margin: const EdgeInsets.fromLTRB(16.0, 0, 16, 8),
                     child: TextField(
@@ -150,7 +179,6 @@ class PayeesMenuScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
-
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async {
@@ -185,27 +213,15 @@ class PayeesMenuScreen extends HookConsumerWidget {
                     ),
                   ),
                 ],
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  //Navigator.pushNamed(context, Routes.ADD_EDIT_PAYEE);
-                  ref.watch(isPayeeEditingProvider.notifier).state = true;
-                  context.go("${Routes.HOME_ROUTE}/${Routes.ADD_EDIT_PAYEE}");
-                  //context.push(Routes.ADD_EDIT_PAYEE);
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
-            );
+              );
+            }
+            return Center(
+                child: ApiErrorWidget(
+                    message: response?.data?.message.toString() ?? ""));
           }
-          return Center(
-              child: ApiErrorWidget(
-                  message: response?.data?.message.toString() ?? ""));
-        }
-        return const Center(child: CircularProgressIndicator());
-      },
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }
@@ -219,11 +235,30 @@ class PayeeItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
+        console("message -> ${item?.employeeTypeDisplay ?? ""}");
         ref.watch(selectedPayeeProvider.notifier).state = PayeeTypeWidget(
           title: item?.employeeTypeDisplay ?? "",
           isEditable: false,
         );
+        final List<EmployeeDocumentsItem> list = [];
+        item?.documents?.forEach((document) {
+          var mEmployeeDocument = EmployeeDocumentsItem(
+            employeeDocumentTypeId: document.employeeDocumentId,
+            employeeName: document.documentTitle,
+            employeeTypeCode: "",
+            urlLink: null,
+            employeeDocumentId: document.employeeDocumentId,
+            documentName: document.documentName,
+            documentType: document.documentType,
+            documentTitle: document.documentTitle,
+            documentData: document.documentData,
+            employeeDocumentTypeName: document.employeeDocumentTypeName,
+            isPicked: true,
+          );
 
+          list.add(mEmployeeDocument);
+        });
+        ref.watch(selectedDocumentsProvider.notifier).state = list;
         context.go("${Routes.HOME_ROUTE}/${Routes.ADD_EDIT_PAYEE}",
             extra: item);
       },

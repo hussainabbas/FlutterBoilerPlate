@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:manawanui/helpers/utils/util_functions.dart';
 import 'package:manawanui/widgets/dotted_line_painter.dart';
 import 'package:manawanui/widgets/simple_text_input.dart';
 import 'package:manawanui/widgets/text_view.dart';
@@ -12,6 +11,8 @@ class DataTextInputWidget extends StatelessWidget {
       required this.controller,
       required this.onChanged,
       required this.isEditing,
+      this.textInputType,
+      this.maxLength,
       this.error});
 
   final String title;
@@ -20,10 +21,11 @@ class DataTextInputWidget extends StatelessWidget {
   final String? error;
   final bool isEditing;
   final ValueChanged<String> onChanged;
+  final TextInputType? textInputType;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
-    console("VALUE => $value");
     controller.text = value ?? "";
     return GestureDetector(
       child: Container(
@@ -52,7 +54,11 @@ class DataTextInputWidget extends StatelessWidget {
                   SimpleTextField(
                     isEditable: isEditing,
                     controller: controller,
-                    onChanged: (e) {},
+                    maxLength: maxLength,
+                    textInputType: textInputType,
+                    onChanged: (e) {
+                      onChanged(e);
+                    },
                     errorMessage: error,
                   ), // Add some spacing
                   CustomPaint(

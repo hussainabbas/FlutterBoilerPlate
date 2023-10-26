@@ -1,9 +1,9 @@
-import 'package:manawanui/data/models/funder_model.dart';
+import 'package:manawanui/data/models/get_employee_payee_initials_response.dart';
 
 class GetCategorySupportPlanResponse {
   bool? status;
   String? message;
-  List<FunderModel>? response;
+  List<GenericIdValueModel>? response;
 
   GetCategorySupportPlanResponse({this.status, this.message, this.response});
 
@@ -11,9 +11,9 @@ class GetCategorySupportPlanResponse {
     status = json['Status'];
     message = json['Message'];
     if (json['Response'] != null) {
-      response = <FunderModel>[];
+      response = <GenericIdValueModel>[];
       json['Response'].forEach((v) {
-        response!.add(FunderModel.fromJson(v));
+        response!.add(GenericIdValueModel.fromJson(v));
       });
     }
   }

@@ -1,7 +1,5 @@
-import 'package:manawanui/data/models/client_model.dart';
 import 'package:manawanui/data/models/dynamics_statement_model.dart';
-import 'package:manawanui/data/models/funder_model.dart';
-import 'package:manawanui/data/models/funder_start_date_model.dart';
+import 'package:manawanui/data/models/get_employee_payee_initials_response.dart';
 import 'package:manawanui/data/models/report_headers_model.dart';
 import 'package:manawanui/data/models/report_items_model.dart';
 
@@ -23,9 +21,9 @@ class StatementResponseModel {
   bool? showWarning;
   String? clientServiceCategoryName;
   bool? multiFamily;
-  ClientModel? client;
-  FunderModel? funder;
-  FunderStartDateModel? funderStartDate;
+  GenericIdValueModel? client;
+  GenericIdValueModel? funder;
+  GenericIdValueModel? funderStartDate;
   List<ReportItemsModel>? reportItems;
   List<ReportHeadersModel>? reportHeaders;
   String? clientCategorySupportPlanList;
@@ -91,12 +89,14 @@ class StatementResponseModel {
     showWarning = json['ShowWarning'];
     clientServiceCategoryName = json['ClientServiceCategoryName'];
     multiFamily = json['MultiFamily'];
-    client =
-        json['Client'] != null ? ClientModel.fromJson(json['Client']) : null;
-    funder =
-        json['Funder'] != null ? FunderModel.fromJson(json['Funder']) : null;
+    client = json['Client'] != null
+        ? GenericIdValueModel.fromJson(json['Client'])
+        : null;
+    funder = json['Funder'] != null
+        ? GenericIdValueModel.fromJson(json['Funder'])
+        : null;
     funderStartDate = json['FunderStartDate'] != null
-        ? FunderStartDateModel.fromJson(json['FunderStartDate'])
+        ? GenericIdValueModel.fromJson(json['FunderStartDate'])
         : null;
     if (json['ReportItems'] != null) {
       reportItems = <ReportItemsModel>[];

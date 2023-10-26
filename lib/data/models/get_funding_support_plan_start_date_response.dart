@@ -1,9 +1,9 @@
-import 'package:manawanui/data/models/funder_start_date_model.dart';
+import 'package:manawanui/data/models/get_employee_payee_initials_response.dart';
 
 class GetFundingSupportPlanStartDateResponse {
   bool? status;
   String? message;
-  List<FunderStartDateModel>? response;
+  List<GenericIdValueModel>? response;
 
   GetFundingSupportPlanStartDateResponse(
       {this.status, this.message, this.response});
@@ -12,9 +12,9 @@ class GetFundingSupportPlanStartDateResponse {
     status = json['Status'];
     message = json['Message'];
     if (json['Response'] != null) {
-      response = <FunderStartDateModel>[];
+      response = <GenericIdValueModel>[];
       json['Response'].forEach((v) {
-        response!.add(FunderStartDateModel.fromJson(v));
+        response!.add(GenericIdValueModel.fromJson(v));
       });
     }
   }

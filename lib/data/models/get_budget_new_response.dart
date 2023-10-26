@@ -1,6 +1,4 @@
-import 'package:manawanui/data/models/client_model.dart';
-import 'package:manawanui/data/models/funder_model.dart';
-import 'package:manawanui/data/models/funder_start_date_model.dart';
+import 'package:manawanui/data/models/get_employee_payee_initials_response.dart';
 
 class GetBudgetNewResponse {
   bool? status;
@@ -30,9 +28,9 @@ class GetBudgetNewResponse {
 
 class BudgetNewModel {
   bool? multiFamily;
-  ClientModel? client;
-  FunderModel? funder;
-  FunderStartDateModel? funderStartDate;
+  GenericIdValueModel? client;
+  GenericIdValueModel? funder;
+  GenericIdValueModel? funderStartDate;
   double? currentSpend;
   double? budgetLeft;
   int? employerId;
@@ -62,12 +60,14 @@ class BudgetNewModel {
 
   BudgetNewModel.fromJson(Map<String, dynamic> json) {
     multiFamily = json['MultiFamily'];
-    client =
-        json['Client'] != null ? ClientModel.fromJson(json['Client']) : null;
-    funder =
-        json['Funder'] != null ? FunderModel.fromJson(json['Funder']) : null;
+    client = json['Client'] != null
+        ? GenericIdValueModel.fromJson(json['Client'])
+        : null;
+    funder = json['Funder'] != null
+        ? GenericIdValueModel.fromJson(json['Funder'])
+        : null;
     funderStartDate = json['FunderStartDate'] != null
-        ? FunderStartDateModel.fromJson(json['FunderStartDate'])
+        ? GenericIdValueModel.fromJson(json['FunderStartDate'])
         : null;
     currentSpend = json['CurrentSpend'];
     budgetLeft = json['BudgetLeft'];
@@ -176,19 +176,19 @@ class BudgetEmployeesModel {
   int? employeeId;
   String? startDate;
   String? endDate;
-  int? hours;
+  double? hours;
   String? frequencyCode;
   String? employeeTypeCode;
   String? frequencyDisplay;
   String? employeeName;
   double? standardPayRate;
-  int? hourlyRate;
+  double? hourlyRate;
   double? inclusiveRate;
   double? inclusiveWeekendRate;
   double? inclusiveNightRate;
-  int? weekendHours;
+  double? weekendHours;
   double? weekendRate;
-  int? nightHours;
+  double? nightHours;
   double? nightRate;
   double? inclusiveAmountForPeriod;
 
@@ -269,7 +269,7 @@ class BudgetExpensesModel {
   String? supportPlanId;
   String? startDate;
   String? endDate;
-  int? amount;
+  double? amount;
   String? description;
   String? frequencyCode;
   String? frequencyDisplay;

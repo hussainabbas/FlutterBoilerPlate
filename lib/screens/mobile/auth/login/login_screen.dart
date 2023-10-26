@@ -221,6 +221,7 @@ class BuildLoginScreen extends HookConsumerWidget {
               borderRadius: BorderRadius.circular(8),
               border: Border.all(width: 0.2)),
           width: context.fullWidth(multiplier: kIsWeb ? 0.29 : 0.9),
+          height: context.fullHeight(multiplier: 0.62),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.max,

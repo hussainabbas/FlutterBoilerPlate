@@ -32,7 +32,8 @@ class FixedWidthColumn extends StatelessWidget {
         children: [
           isStatus ?? false
               ? Container(
-                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                  width: context.fullWidth(),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: isStatus ?? false
@@ -42,14 +43,14 @@ class FixedWidthColumn extends StatelessWidget {
                     text: text,
                     textColor: isStatus ?? false ? Colors.white : Colors.black,
                     textFontWeight: FontWeight.normal,
-                    fontSize: 12,
+                    fontSize: 10,
                     align: TextAlign.center,
                   ))
               : TextView(
-                  text: text,
+            text: text,
                   textColor: isStatus ?? false ? Colors.white : Colors.black,
                   textFontWeight: FontWeight.normal,
-                  fontSize: 13,
+                  fontSize: 12,
                   align: TextAlign.center,
                 ),
           Container(

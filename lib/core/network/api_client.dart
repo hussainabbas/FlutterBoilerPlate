@@ -52,29 +52,6 @@ class ApiClient implements NetworkOperations {
         "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale,Access-Control-Allow-Origin, Accept";
   }
 
-  // ApiClient(String baseUrl)
-  //     : _dio = Dio(BaseOptions(
-  //         baseUrl: baseUrl,
-  //         headers: {
-  //           "content-Type": "application/x-www-form-urlencoded",
-  //           "Access-Control-Allow-Origin": "*",
-  //           "Access-Control-Allow-Credentials": true,
-  //           "Access-Control-Allow-Methods": "GET, HEAD, POST, OPTIONS",
-  //           "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale,Access-Control-Allow-Origin, Accept",
-  //           "DeviceInfo": "${await getDeviceInfo()}"
-  //         },
-  //         connectTimeout: const Duration(seconds: 30),
-  //         receiveTimeout: const Duration(seconds: 30),
-  //       ))
-  //         ..interceptors.add(
-  //           AwesomeDioInterceptor(
-  //             logRequestTimeout: true,
-  //             logRequestHeaders: true,
-  //             logResponseHeaders: true,
-  //             logger: debugPrint,
-  //           ),
-  //         );
-
   @override
   void setHeaders(Map<String, String> headers) {
     _dio.options.headers.addAll(headers);
@@ -115,5 +92,10 @@ class ApiClient implements NetworkOperations {
         return ApiResult<T>(error: 'Failed to load data: $e');
       }
     }
+  }
+
+  @override
+  void setNzHeaders(Map<String, String> headers) {
+    _dio.options.headers.addAll(headers);
   }
 }

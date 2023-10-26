@@ -64,7 +64,7 @@ extension CustomDialog on BuildContext {
     );
   }
 
-  void showErrorDialog(String message) {
+  void showErrorDialog(String message, {String? title}) {
     showDialog(
       context: this,
       builder: (BuildContext context) {
@@ -72,9 +72,9 @@ extension CustomDialog on BuildContext {
         return FractionallySizedBox(
           widthFactor: kIsWeb ? 0.4 : 1.0,
           child: AlertDialog(
-            title: const TextView(
-                text: "Error",
-                textColor: Colors.black,
+            title: TextView(
+                text: title ?? "Error",
+                textColor: AppColors.primaryColor,
                 textFontWeight: FontWeight.bold,
                 fontSize: 24),
             content: TextView(
@@ -93,6 +93,45 @@ extension CustomDialog on BuildContext {
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  showConfirmationDialog(
+    String title,
+    String content,
+    VoidCallback onYesPressed,
+  ) {
+    showDialog<void>(
+      context: this,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: TextView(
+              text: title,
+              textColor: AppColors.primaryColor,
+              textFontWeight: FontWeight.bold,
+              fontSize: 16),
+          content: TextView(
+              text: content,
+              textColor: Colors.black,
+              textFontWeight: FontWeight.normal,
+              fontSize: 14),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                onYesPressed(); // Execute 'Yes' action
+              },
+              child: const Text('Yes'),
+            ),
+          ],
         );
       },
     );

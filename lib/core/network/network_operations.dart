@@ -8,4 +8,6 @@ abstract class NetworkOperations {
       T Function(Map<String, dynamic>) fromJson);
 
   void setHeaders(Map<String, String> headers) {}
+
+  void setNzHeaders(Map<String, String> headers) {}
 }

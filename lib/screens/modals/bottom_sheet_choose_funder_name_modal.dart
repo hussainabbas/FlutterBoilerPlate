@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manawanui/data/models/funder_model.dart';
+import 'package:manawanui/data/models/get_employee_payee_initials_response.dart';
 import 'package:manawanui/data/models/user_details_response.dart';
 import 'package:manawanui/helpers/extension/context_function.dart';
 import 'package:manawanui/helpers/resources/api_param_keys.dart';
@@ -11,8 +11,8 @@ import 'package:manawanui/widgets/text_view.dart';
 class BottomSheetChooseFunderNameModal {
   static void show(
       BuildContext context,
-      List<FunderModel>? list,
-      FunderModel selectedCategory,
+      List<GenericIdValueModel>? list,
+      GenericIdValueModel selectedCategory,
       DashboardViewModel viewModel,
       UserDetailsResponse? userDetails) {
     showModalBottomSheet(

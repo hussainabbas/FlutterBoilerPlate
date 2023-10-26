@@ -7,10 +7,12 @@ class DataSwitchWidget extends StatelessWidget {
       {super.key,
       required this.title,
       required this.isSelected,
+      required this.isEditing,
       required this.onChanged});
 
   final String title;
   final bool isSelected;
+  final bool isEditing;
   final ValueChanged<bool> onChanged;
 
   @override
@@ -33,9 +35,6 @@ class DataSwitchWidget extends StatelessWidget {
                 textColor: Colors.black,
                 textFontWeight: FontWeight.normal,
                 fontSize: 14),
-            const SizedBox(
-              height: 14,
-            ),
             Stack(
               alignment: Alignment.center,
               children: [
@@ -43,14 +42,16 @@ class DataSwitchWidget extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Switch(
-                        value: true,
-                        //value: isSelected,
-                        onChanged: (value) {
-                          onChanged(value);
-                        },
-                      ),
-                      const SizedBox(height: 14.0), // Add some spacing
+                      AbsorbPointer(
+                        absorbing: isEditing,
+                        child: Switch(
+                          value: true,
+                          //value: isSelected,
+                          onChanged: (value) {
+                            onChanged(value);
+                          },
+                        ),
+                      ), // Add some spacing
                       CustomPaint(
                         size: const Size(80.0, 2.0),
                         painter: DottedLinePainter(),

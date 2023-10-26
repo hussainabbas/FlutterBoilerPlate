@@ -4,14 +4,17 @@ import 'package:manawanui/widgets/dotted_line_painter.dart';
 import 'package:manawanui/widgets/text_view.dart';
 
 class DataChooseWidget extends StatelessWidget {
-  const DataChooseWidget({super.key, required this.title, this.value});
+  const DataChooseWidget(
+      {super.key, required this.title, this.value, this.onPress});
 
   final String title;
   final String? value;
+  final VoidCallback? onPress;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: onPress,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -24,14 +27,16 @@ class DataChooseWidget extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            TextView(
-                text: title,
-                textColor: Colors.black,
-                textFontWeight: FontWeight.normal,
-                fontSize: 14),
-            const SizedBox(
-              height: 14,
-            ),
+            if (title.isNotEmpty)
+              TextView(
+                  text: title,
+                  textColor: Colors.black,
+                  textFontWeight: FontWeight.normal,
+                  fontSize: 14),
+            if (title.isNotEmpty)
+              const SizedBox(
+                height: 14,
+              ),
             Stack(
               alignment: Alignment.center,
               children: [
@@ -43,6 +48,7 @@ class DataChooseWidget extends StatelessWidget {
                           text: value ?? "Choose",
                           textColor: AppColors.primaryColor,
                           textFontWeight: FontWeight.normal,
+                          align: TextAlign.center,
                           fontSize: 14),
                       const SizedBox(height: 14.0), // Add some spacing
                       CustomPaint(
@@ -55,7 +61,7 @@ class DataChooseWidget extends StatelessWidget {
                 const Positioned(
                     right: 0,
                     child:
-                        Opacity(opacity: 0.07, child: Icon(Icons.person_pin)))
+                    Opacity(opacity: 0.07, child: Icon(Icons.person_pin)))
               ],
             ),
           ],
