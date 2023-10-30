@@ -44,4 +44,5 @@ class ApiEndPoints {
   static const String GET_TIMESHEET_INITIALS_ER =
       'Timesheet/TimeSheetInitialsEr';
   static const String UPDATE_TIMESHEET = 'Timesheet/UpdateTimesheet';
+  static const String GET_TIMESHEET_DETAIL = 'Timesheet/GetTimeSheetDetail';
 }

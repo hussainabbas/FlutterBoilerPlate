@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:manawanui/core/network/api_result.dart';
+import 'package:manawanui/data/models/get_timesheet_detail_response.dart';
 import 'package:manawanui/data/models/get_timesheet_initials_er_response.dart';
 import 'package:manawanui/data/models/get_timesheet_response.dart';
 import 'package:manawanui/data/models/get_timesheet_transaction_periods_response.dart';
@@ -36,19 +37,54 @@ class TimesheetViewModel {
       get responseGetTimesheetTransactionPeriodStream =>
           _responseGetTimesheetTransactionPeriodController.stream;
 
-  final _responseUpdateTimesheetController =
+  final _responseUpdateTimesheetTimesheetController =
       StreamController<ApiResult<GetUpdateTimesheetResponse>>.broadcast();
 
   Stream<ApiResult<GetUpdateTimesheetResponse>>
-      get responseUpdateTimesheetStream =>
-          _responseUpdateTimesheetController.stream;
+      get responseUpdateTimesheetTimesheetStream =>
+          _responseUpdateTimesheetTimesheetController.stream;
 
-  final _responseTimesheetInitialsErController =
+  final _responseUpdateTimesheetExpenseController =
+      StreamController<ApiResult<GetUpdateTimesheetResponse>>.broadcast();
+
+  Stream<ApiResult<GetUpdateTimesheetResponse>>
+      get responseUpdateTimesheetExpenseStream =>
+          _responseUpdateTimesheetExpenseController.stream;
+
+  final _responseTimesheetInitialsErTimesheetController =
       StreamController<ApiResult<GetTimesheetInitialErResponse>>.broadcast();
 
   Stream<ApiResult<GetTimesheetInitialErResponse>>
-      get responseTimesheetInitialsErStream =>
-          _responseTimesheetInitialsErController.stream;
+      get responseTimesheetInitialsErTimesheetStream =>
+          _responseTimesheetInitialsErTimesheetController.stream;
+
+  final _responseUpdateTimesheetPaymentController =
+      StreamController<ApiResult<GetUpdateTimesheetResponse>>.broadcast();
+
+  Stream<ApiResult<GetUpdateTimesheetResponse>>
+      get responseUpdateTimesheetPaymentStream =>
+          _responseUpdateTimesheetPaymentController.stream;
+
+  final _responseTimesheetInitialsErExpenseController =
+      StreamController<ApiResult<GetTimesheetInitialErResponse>>.broadcast();
+
+  Stream<ApiResult<GetTimesheetInitialErResponse>>
+      get responseTimesheetInitialsErExpenseStream =>
+          _responseTimesheetInitialsErExpenseController.stream;
+
+  final _responseTimesheetInitialsErExpensePayment =
+      StreamController<ApiResult<GetTimesheetInitialErResponse>>.broadcast();
+
+  Stream<ApiResult<GetTimesheetInitialErResponse>>
+      get responseTimesheetInitialsExpensePaymentStream =>
+          _responseTimesheetInitialsErExpensePayment.stream;
+
+  final _responseTimesheetDetailsPayment =
+      StreamController<ApiResult<GetTimesheetDetailResponse>>.broadcast();
+
+  Stream<ApiResult<GetTimesheetDetailResponse>>
+      get responseTimesheetDetailsStream =>
+          _responseTimesheetDetailsPayment.stream;
 
   Future<void> getTimeSheets(Map<String, dynamic> body) async {
     try {
@@ -85,26 +121,87 @@ class TimesheetViewModel {
     }
   }
 
-  Future<void> updateTimesheet(Map<String, dynamic> body) async {
+  Future<void> updateTimesheetTimesheet(Map<String, dynamic> body) async {
     try {
       final response = await _repository.updateTimesheet(body);
-      _responseUpdateTimesheetController.sink.add(response);
+      _responseUpdateTimesheetTimesheetController.sink.add(response);
     } catch (e) {
       console('updateTimesheet - Error fetching data: $e');
-      _responseUpdateTimesheetController.sink.add(
+      _responseUpdateTimesheetTimesheetController.sink.add(
           ApiResult<GetUpdateTimesheetResponse>(
               error: 'Failed to load data: $e'));
     }
   }
 
-  Future<void> getTimesheetInitialsEr(Map<String, dynamic> body) async {
+  Future<void> updateTimesheetExpense(Map<String, dynamic> body) async {
+    try {
+      final response = await _repository.updateTimesheet(body);
+      _responseUpdateTimesheetExpenseController.sink.add(response);
+    } catch (e) {
+      console('updateTimesheet - Error fetching data: $e');
+      _responseUpdateTimesheetExpenseController.sink.add(
+          ApiResult<GetUpdateTimesheetResponse>(
+              error: 'Failed to load data: $e'));
+    }
+  }
+
+  Future<void> updateTimesheetPayment(Map<String, dynamic> body) async {
+    try {
+      final response = await _repository.updateTimesheet(body);
+      _responseUpdateTimesheetPaymentController.sink.add(response);
+    } catch (e) {
+      console('updateTimesheet - Error fetching data: $e');
+      _responseUpdateTimesheetPaymentController.sink.add(
+          ApiResult<GetUpdateTimesheetResponse>(
+              error: 'Failed to load data: $e'));
+    }
+  }
+
+  Future<void> getTimesheetInitialsErTimesheet(
+      Map<String, dynamic> body) async {
     try {
       final response = await _repository.getTimesheetInitialsEr(body);
-      _responseTimesheetInitialsErController.sink.add(response);
+      _responseTimesheetInitialsErTimesheetController.sink.add(response);
     } catch (e) {
       console('getTimesheetInitialsEr - Error fetching data: $e');
-      _responseTimesheetInitialsErController.sink.add(
+      _responseTimesheetInitialsErTimesheetController.sink.add(
           ApiResult<GetTimesheetInitialErResponse>(
+              error: 'Failed to load data: $e'));
+    }
+  }
+
+  Future<void> getTimesheetInitialsErExpense(Map<String, dynamic> body) async {
+    try {
+      final response = await _repository.getTimesheetInitialsEr(body);
+      _responseTimesheetInitialsErExpenseController.sink.add(response);
+    } catch (e) {
+      console('getTimesheetInitialsEr - Error fetching data: $e');
+      _responseTimesheetInitialsErExpenseController.sink.add(
+          ApiResult<GetTimesheetInitialErResponse>(
+              error: 'Failed to load data: $e'));
+    }
+  }
+
+  Future<void> getTimesheetInitialsErPayment(Map<String, dynamic> body) async {
+    try {
+      final response = await _repository.getTimesheetInitialsEr(body);
+      _responseTimesheetInitialsErExpensePayment.sink.add(response);
+    } catch (e) {
+      console('getTimesheetInitialsEr - Error fetching data: $e');
+      _responseTimesheetInitialsErExpensePayment.sink.add(
+          ApiResult<GetTimesheetInitialErResponse>(
+              error: 'Failed to load data: $e'));
+    }
+  }
+
+  Future<void> getTimesheetDetails(Map<String, dynamic> body) async {
+    try {
+      final response = await _repository.getTimesheetDetails(body);
+      _responseTimesheetDetailsPayment.sink.add(response);
+    } catch (e) {
+      console('getTimesheetDetails - Error fetching data: $e');
+      _responseTimesheetDetailsPayment.sink.add(
+          ApiResult<GetTimesheetDetailResponse>(
               error: 'Failed to load data: $e'));
     }
   }
@@ -113,7 +210,12 @@ class TimesheetViewModel {
     _responseGetTimesheetController.close();
     _responseGetTimesheetEmployeeDropDownController.close();
     _responseGetTimesheetTransactionPeriodController.close();
-    _responseUpdateTimesheetController.close();
-    _responseTimesheetInitialsErController.close();
+    _responseUpdateTimesheetTimesheetController.close();
+    _responseUpdateTimesheetExpenseController.close();
+    _responseUpdateTimesheetPaymentController.close();
+    _responseTimesheetInitialsErTimesheetController.close();
+    _responseTimesheetInitialsErExpenseController.close();
+    _responseTimesheetInitialsErExpensePayment.close();
+    _responseTimesheetDetailsPayment.close();
   }
 }

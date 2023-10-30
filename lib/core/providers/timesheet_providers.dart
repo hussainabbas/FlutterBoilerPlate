@@ -30,10 +30,32 @@ final selectedTimesheetPayeeProvider =
 final selectedTimesheetFortnightProvider =
     StateProvider<TransPeriodModal?>((ref) => null);
 
+///TIMESHEET BLOCK PROVIDERS
 final selectedTimesheetPersonSupportedProvider =
     <StateProvider<EmployeeModel?>>[];
+
 final selectedTimesheetPayComponentProvider =
     <StateProvider<PayComponentsModel?>>[];
+
+///EXPENSE BLOCK PROVIDERS
+final selectedTimesheetExpensePersonSupportedProvider =
+    <StateProvider<EmployeeModel?>>[];
+
+final selectedTimesheetExpenseExpensePayeeProvider =
+    <StateProvider<ExpensePayeeListModel?>>[];
+
+final selectedTimesheetExpenseTypeProvider =
+    <StateProvider<ExpenseTypeModel?>>[];
+
+final selectedTimesheetExpenseDateProvider = <StateProvider<DateTime?>>[];
+
+///PAYMENTS BLOCK PROVIDERS
+final selectedTimesheetPaymentPersonSupportedProvider =
+    <StateProvider<EmployeeModel?>>[];
+
+final selectedTimesheetPaymentsDateProvider = <StateProvider<DateTime?>>[];
+final selectedTimesheetPaymentsProviderNameProvider =
+    <StateProvider<ExpensePayeeListModel?>>[];
 
 // final selectedTimesheetSelectedHoursProvider =
 // <StateProvider<double?>>[];
@@ -72,15 +94,16 @@ class TimeSheetDataListNotifier
   }
 }
 
-class ExpenseSheetDataListNotifier extends StateNotifier<List<String>> {
+class ExpenseSheetDataListNotifier
+    extends StateNotifier<List<ExpenseItemModel>> {
   ExpenseSheetDataListNotifier() : super([]);
 
-  void addItem(String item) {
+  void addItem(ExpenseItemModel item) {
     state.add(item);
     state = [...state];
   }
 
-  void removeItem(String item) {
+  void removeItem(ExpenseItemModel item) {
     state.remove(item);
     state = [...state];
   }
@@ -90,15 +113,15 @@ class ExpenseSheetDataListNotifier extends StateNotifier<List<String>> {
   }
 }
 
-class PaymentsDataListNotifier extends StateNotifier<List<String>> {
+class PaymentsDataListNotifier extends StateNotifier<List<PaymentsItemModel>> {
   PaymentsDataListNotifier() : super([]);
 
-  void addItem(String item) {
+  void addItem(PaymentsItemModel item) {
     state.add(item);
     state = [...state];
   }
 
-  void removeItem(String item) {
+  void removeItem(PaymentsItemModel item) {
     state.remove(item);
     state = [...state];
   }

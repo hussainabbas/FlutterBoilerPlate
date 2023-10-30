@@ -10,6 +10,7 @@ import 'package:manawanui/data/models/get_employer_client_list_response.dart';
 import 'package:manawanui/data/models/get_funding_support_plan_start_date_response.dart';
 import 'package:manawanui/data/models/get_mail_count_response.dart';
 import 'package:manawanui/data/models/get_statement_new_response.dart';
+import 'package:manawanui/data/models/get_timesheet_detail_response.dart';
 import 'package:manawanui/data/models/get_timesheet_initials_er_response.dart';
 import 'package:manawanui/data/models/get_timesheet_response.dart';
 import 'package:manawanui/data/models/get_timesheet_transaction_periods_response.dart';
@@ -71,5 +72,8 @@ abstract class Repository {
       Map<String, dynamic> body);
 
   Future<ApiResult<GetTimesheetInitialErResponse>> getTimesheetInitialsEr(
+      Map<String, dynamic> body);
+
+  Future<ApiResult<GetTimesheetDetailResponse>> getTimesheetDetails(
       Map<String, dynamic> body);
 }

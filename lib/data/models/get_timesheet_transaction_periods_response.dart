@@ -1,6 +1,7 @@
 class GetTimesheetTransactionPeriodResponse {
   bool? status;
   String? message;
+
   ResponseTransactionPeriodModal? response;
 
   GetTimesheetTransactionPeriodResponse(
@@ -9,6 +10,7 @@ class GetTimesheetTransactionPeriodResponse {
   GetTimesheetTransactionPeriodResponse.fromJson(Map<String, dynamic> json) {
     status = json['Status'];
     message = json['Message'];
+
     response = json['Response'] != null
         ? ResponseTransactionPeriodModal.fromJson(json['Response'])
         : null;
@@ -18,6 +20,7 @@ class GetTimesheetTransactionPeriodResponse {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['Status'] = status;
     data['Message'] = message;
+
     if (response != null) {
       data['Response'] = response!.toJson();
     }
@@ -28,7 +31,11 @@ class GetTimesheetTransactionPeriodResponse {
 class ResponseTransactionPeriodModal {
   List<TransPeriodModal>? transPeriod;
 
-  ResponseTransactionPeriodModal({this.transPeriod});
+  bool? showTimesheetBlock;
+  bool? showPaymentBlock;
+
+  ResponseTransactionPeriodModal(
+      {this.transPeriod, this.showTimesheetBlock, this.showPaymentBlock});
 
   ResponseTransactionPeriodModal.fromJson(Map<String, dynamic> json) {
     if (json['TransPeriod'] != null) {
@@ -37,6 +44,9 @@ class ResponseTransactionPeriodModal {
         transPeriod!.add(TransPeriodModal.fromJson(v));
       });
     }
+
+    showPaymentBlock = json['ShowPaymentBlock'];
+    showTimesheetBlock = json['ShowTimesheetBlock'];
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +54,8 @@ class ResponseTransactionPeriodModal {
     if (transPeriod != null) {
       data['TransPeriod'] = transPeriod!.map((v) => v.toJson()).toList();
     }
+    data['ShowTimesheetBlock'] = showTimesheetBlock;
+    data['ShowPaymentBlock'] = showPaymentBlock;
     return data;
   }
 }

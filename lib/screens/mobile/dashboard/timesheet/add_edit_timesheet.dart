@@ -15,6 +15,7 @@ import 'package:manawanui/data/models/get_update_timesheet_response.dart';
 import 'package:manawanui/data/models/timesheet_employee_dropdown_response.dart';
 import 'package:manawanui/data/models/timesheet_hours_model.dart';
 import 'package:manawanui/helpers/extension/context_function.dart';
+import 'package:manawanui/helpers/extension/date_time_functions.dart';
 import 'package:manawanui/helpers/extension/double_functions.dart';
 import 'package:manawanui/helpers/extension/string_extensions.dart';
 import 'package:manawanui/helpers/extension/widget_ref_functions.dart';
@@ -24,11 +25,14 @@ import 'package:manawanui/helpers/utils/util_functions.dart';
 import 'package:manawanui/screens/modals/bottom_sheet_choose_fortnight_modal.dart';
 import 'package:manawanui/screens/modals/bottom_sheet_choose_hours_modal.dart';
 import 'package:manawanui/screens/modals/bottom_sheet_employee_dropdown_modal.dart';
+import 'package:manawanui/screens/modals/bottom_sheet_generic_expansion_modal.dart';
 import 'package:manawanui/screens/modals/bottom_sheet_generic_modal.dart';
+import 'package:manawanui/screens/modals/custom_date_picker.dart';
 import 'package:manawanui/widgets/api_error_widget.dart';
 import 'package:manawanui/widgets/custom_app_bar.dart';
 import 'package:manawanui/widgets/custom_elevated_button.dart';
 import 'package:manawanui/widgets/data_choose_widget.dart';
+import 'package:manawanui/widgets/data_text_input_widget.dart';
 import 'package:manawanui/widgets/section_title.dart';
 import 'package:manawanui/widgets/text_view.dart';
 
@@ -39,17 +43,13 @@ class AddEditTimeSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final argsIndex = ModalRoute.of(context)?.settings.arguments as int;
     final viewModel = ref.watch(timesheetViewModelProvider);
     final userDetails = ref.watch(userDetailsProvider);
     final selectedTimesheetPayeeState =
         ref.watch(selectedTimesheetPayeeProvider.notifier);
     final selectedTimesheetFortnightState =
         ref.watch(selectedTimesheetFortnightProvider.notifier);
-    final mExpenseSheetDataListProvider =
-        ref.watch(expenseSheetDataListProvider.notifier);
-    final mPaymentsSheetDataListProvider =
-        ref.watch(paymentsSheetDataListProvider.notifier);
+
     final ScrollController scrollController = ScrollController();
     // Function to scroll to the newly added item
     void scrollToNewItem(int length) {
@@ -65,11 +65,23 @@ class AddEditTimeSheet extends HookConsumerWidget {
     }
 
     useEffect(() {
-      viewModel.getTimesheetEmployeeDropdown({
-        ApiParamKeys.KEY_USER_ID_SMALL: userDetails?.userId ?? "",
-        ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
-        ApiParamKeys.KEY_IS_SELF_MANAGED: userDetails?.isSelfManaged ?? false,
-      });
+      if (timesheetItemModel == null) {
+        viewModel.getTimesheetEmployeeDropdown({
+          ApiParamKeys.KEY_USER_ID_SMALL: userDetails?.userId ?? "",
+          ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
+          ApiParamKeys.KEY_IS_SELF_MANAGED: userDetails?.isSelfManaged ?? false,
+        });
+      } else {
+        viewModel.getTimesheetDetails({
+          ApiParamKeys.KEY_USER_ID_SMALL: userDetails?.userId ?? "",
+          ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
+          ApiParamKeys.KEY_EMPLOYEE_ID_SMALL:
+              timesheetItemModel?.employeeId ?? "",
+          ApiParamKeys.KEY_TIMESHEET_ID_SMALL:
+              timesheetItemModel?.timesheetId ?? "",
+          ApiParamKeys.KEY_IS_SELF_MANAGED: userDetails?.isSelfManaged ?? false,
+        });
+      }
     }, []);
 
     return WillPopScope(
@@ -77,7 +89,12 @@ class AddEditTimeSheet extends HookConsumerWidget {
         currentPageProviders.clear();
         selectedTimesheetPersonSupportedProvider.clear();
         selectedTimesheetPayComponentProvider.clear();
-        //selectedTimesheetSelectedHoursProvider.clear();
+        selectedTimesheetExpensePersonSupportedProvider.clear();
+        selectedTimesheetExpenseDateProvider.clear();
+        selectedTimesheetExpenseTypeProvider.clear();
+        selectedTimesheetExpenseExpensePayeeProvider.clear();
+        selectedTimesheetExpensePersonSupportedProvider.clear();
+
         ref.invalidateTimeSheetProviders();
         return true;
       },
@@ -87,7 +104,12 @@ class AddEditTimeSheet extends HookConsumerWidget {
           currentPageProviders.clear();
           selectedTimesheetPersonSupportedProvider.clear();
           selectedTimesheetPayComponentProvider.clear();
-          //selectedTimesheetSelectedHoursProvider.clear();
+          selectedTimesheetExpensePersonSupportedProvider.clear();
+          selectedTimesheetExpenseDateProvider.clear();
+          selectedTimesheetExpenseTypeProvider.clear();
+          selectedTimesheetExpenseExpensePayeeProvider.clear();
+          selectedTimesheetExpensePersonSupportedProvider.clear();
+
           ref.invalidateTimeSheetProviders();
           context.pop();
         }, timesheetItemModel == null ? "Add Timesheet" : "Edit Timesheet",
@@ -134,7 +156,6 @@ class AddEditTimeSheet extends HookConsumerWidget {
                         const SizedBox(
                           height: 8,
                         ),
-
                         StreamBuilder<EligibalEmployeesModal?>(
                             stream: selectedTimesheetPayeeState.stream,
                             builder: (context, snapshot) {
@@ -182,7 +203,6 @@ class AddEditTimeSheet extends HookConsumerWidget {
                         const SizedBox(
                           height: 32,
                         ),
-
                         const SectionTitle(
                           title: "Fortnight Period",
                           iconData: Icons.help_rounded,
@@ -190,7 +210,6 @@ class AddEditTimeSheet extends HookConsumerWidget {
                         const SizedBox(
                           height: 8,
                         ),
-
                         StreamBuilder<
                                 ApiResult<
                                     GetTimesheetTransactionPeriodResponse>>(
@@ -198,198 +217,56 @@ class AddEditTimeSheet extends HookConsumerWidget {
                                 .responseGetTimesheetTransactionPeriodStream,
                             builder: (context, snapshot) {
                               var data = snapshot.data?.data;
-                              return StreamBuilder<TransPeriodModal?>(
-                                  stream:
-                                      selectedTimesheetFortnightState.stream,
-                                  builder: (context, snapshot) {
-                                    return DataChooseWidget(
-                                      title: "",
-                                      value: selectedTimesheetFortnightState
-                                              .state?.name ??
-                                          "Choose",
-                                      onPress: () async {
-                                        if (selectedTimesheetPayeeState.state ==
-                                            null) {
-                                          context.showErrorDialog(
-                                              "Please select Payee before Fortnight period selection",
-                                              title: "To be noted!");
-                                          return;
-                                        }
-                                        BottomSheetChooseFortnightModal.show(
-                                          context,
-                                          data?.response?.transPeriod,
-                                          userDetails,
-                                          ref,
+                              console(
+                                  "ata?.response?.showTimesheetBlock => ${data?.response?.showTimesheetBlock}");
+                              return Column(
+                                children: [
+                                  StreamBuilder<TransPeriodModal?>(
+                                      stream: selectedTimesheetFortnightState
+                                          .stream,
+                                      builder: (context, snapshot) {
+                                        return DataChooseWidget(
+                                          title: "",
+                                          value: selectedTimesheetFortnightState
+                                                  .state?.name ??
+                                              "Choose",
+                                          onPress: () async {
+                                            if (selectedTimesheetPayeeState
+                                                    .state ==
+                                                null) {
+                                              context.showErrorDialog(
+                                                  "Please select Payee before Fortnight period selection",
+                                                  title: "To be noted!");
+                                              return;
+                                            }
+                                            BottomSheetChooseFortnightModal
+                                                .show(
+                                              context,
+                                              data?.response?.transPeriod,
+                                              userDetails,
+                                              ref,
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
-                                  });
+                                      }),
+
+                                  /// Time Sheet
+                                  if (data?.response?.showTimesheetBlock ==
+                                      true)
+                                    TimesheetBlock(
+                                        scrollToNewItem: scrollToNewItem),
+
+                                  /// Expense Sheet
+                                  ExpenseBlock(
+                                      scrollToNewItem: scrollToNewItem),
+
+                                  /// Payments
+                                  if (data?.response?.showPaymentBlock == true)
+                                    PaymentBlock(
+                                        scrollToNewItem: scrollToNewItem),
+                                ],
+                              );
                             }),
-
-                        /// Time Sheet
-                        TimesheetBlock(scrollToNewItem: scrollToNewItem),
-
-                        /// Expense Sheet
-                        const SizedBox(
-                          height: 32,
-                        ),
-                        SectionTitle(
-                          title: "Expense Sheet",
-                          isAddButton: true,
-                          callbackAction: () {
-                            mExpenseSheetDataListProvider.addItem("item");
-                            scrollToNewItem(
-                                mExpenseSheetDataListProvider.state.length * 2);
-                          },
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        StreamBuilder<List<String>>(
-                          stream: mExpenseSheetDataListProvider.stream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data!.isNotEmpty) {
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.all(0),
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: snapshot.data?.length,
-                                    itemBuilder: (context, index) {
-                                      return Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          ExpenseSheetItem(
-                                            index: index,
-                                          ),
-                                          Positioned(
-                                              bottom: 0,
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                  border: Border.all(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    // Border color
-                                                    width: 0.5, // Border width
-                                                  ), // Border radius to make it rounded
-                                                ),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    mExpenseSheetDataListProvider
-                                                        .removeItem(snapshot
-                                                            .data![index]);
-                                                  },
-                                                  child: Icon(
-                                                    Icons.delete_outlined,
-                                                    size: 24,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ),
-                                                ),
-                                              ))
-                                        ],
-                                      );
-                                    });
-                              } else {
-                                return const NotFoundWidget(
-                                    title: "Expense Sheet",
-                                    iconData: Icons.document_scanner_rounded);
-                              }
-                            } else {
-                              return const NotFoundWidget(
-                                  title: "Expense Sheet",
-                                  iconData: Icons.document_scanner_rounded);
-                            }
-                          },
-                        ),
-
-                        /// Payments
-                        const SizedBox(
-                          height: 32,
-                        ),
-                        SectionTitle(
-                          title: "Payments",
-                          isAddButton: true,
-                          callbackAction: () {
-                            mPaymentsSheetDataListProvider.addItem("item");
-                            scrollToNewItem(
-                                mPaymentsSheetDataListProvider.state.length *
-                                    3);
-                          },
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-
-                        StreamBuilder<List<String>>(
-                          stream: mPaymentsSheetDataListProvider.stream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              if (snapshot.data!.isNotEmpty) {
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    padding: const EdgeInsets.all(0),
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: snapshot.data?.length,
-                                    itemBuilder: (context, index) {
-                                      return Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          PaymentsItem(
-                                            index: index,
-                                          ),
-                                          Positioned(
-                                              bottom: 0,
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(4),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                  border: Border.all(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    // Border color
-                                                    width: 0.5, // Border width
-                                                  ), // Border radius to make it rounded
-                                                ),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    mPaymentsSheetDataListProvider
-                                                        .removeItem(snapshot
-                                                            .data![index]);
-                                                  },
-                                                  child: Icon(
-                                                    Icons.delete_outlined,
-                                                    size: 24,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ),
-                                                ),
-                                              ))
-                                        ],
-                                      );
-                                    });
-                              } else {
-                                return const NotFoundWidget(
-                                    title: "Payment", iconData: Icons.payment);
-                              }
-                            } else {
-                              return const NotFoundWidget(
-                                  title: "Payment", iconData: Icons.payment);
-                            }
-                          },
-                        ),
 
                         /// Save button
                         const SizedBox(
@@ -433,8 +310,10 @@ class TimesheetBlock extends HookConsumerWidget {
         ref.watch(selectedTimesheetPayeeProvider.notifier);
     final selectedTimesheetFortnightState =
         ref.watch(selectedTimesheetFortnightProvider.notifier);
+
     GetUpdateTimesheetResponse? updateTimesheetResponse;
     GetTimesheetInitialErResponse? getTimesheetInitialErResponse;
+    Map<String, List<PayComponentsModel>> subgroupLists = {};
 
     void addNewTimeSheetItem() {
       List<TimesheetHoursModel> timesheetHoursList = [];
@@ -455,7 +334,7 @@ class TimesheetBlock extends HookConsumerWidget {
 
     void getTimesheetInitialsEr() async {
       context.showProgressDialog();
-      await viewModel.getTimesheetInitialsEr({
+      await viewModel.getTimesheetInitialsErTimesheet({
         ApiParamKeys.KEY_USER_ID: userDetails?.userId ?? "",
         ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
         ApiParamKeys.KEY_EMPLOYEE_ID_SMALL:
@@ -468,8 +347,8 @@ class TimesheetBlock extends HookConsumerWidget {
     }
 
     useEffect(() {
-      final subscription =
-          viewModel.responseUpdateTimesheetStream.listen((response) async {
+      final subscription = viewModel.responseUpdateTimesheetTimesheetStream
+          .listen((response) async {
         if (response.data?.status == true) {
           updateTimesheetResponse = response.data;
           getTimesheetInitialsEr();
@@ -480,10 +359,26 @@ class TimesheetBlock extends HookConsumerWidget {
     }, const []);
 
     useEffect(() {
-      final subscription =
-          viewModel.responseTimesheetInitialsErStream.listen((response) async {
+      final subscription = viewModel.responseTimesheetInitialsErTimesheetStream
+          .listen((response) async {
         if (response.data?.status == true) {
           getTimesheetInitialErResponse = response.data;
+          List<PayComponentsModel>? payComponents =
+              response.data?.response?.payComponenets;
+
+          for (var item in payComponents!) {
+            String subgroup = item.subGroup ?? "";
+            if (!subgroupLists.containsKey(subgroup)) {
+              subgroupLists[subgroup] = [];
+            }
+            subgroupLists[subgroup]?.add(item);
+          }
+          subgroupLists.forEach((subgroup, items) {
+            console("Subgroup: $subgroup");
+            for (var item in items) {
+              console("Subgroup : item -> ${item.name}");
+            }
+          });
           addNewTimeSheetItem();
         }
       });
@@ -509,7 +404,7 @@ class TimesheetBlock extends HookConsumerWidget {
             }
             if (updateTimesheetResponse == null) {
               context.showProgressDialog();
-              await viewModel.updateTimesheet({
+              await viewModel.updateTimesheetTimesheet({
                 ApiParamKeys.KEY_USER_ID: userDetails?.userId ?? "",
                 ApiParamKeys.KEY_USER_ROLE_CAP: userDetails?.roleCode ?? "",
                 ApiParamKeys.KEY_TIMESHEET_ID: 0,
@@ -551,6 +446,7 @@ class TimesheetBlock extends HookConsumerWidget {
                                 getTimesheetInitialErResponse,
                             timesheetTimeModel:
                                 mTimeSheetDataListProvider.state[index],
+                            subgroupLists: subgroupLists,
                           ),
                           Positioned(
                               bottom: 0,
@@ -567,6 +463,22 @@ class TimesheetBlock extends HookConsumerWidget {
                                 ),
                                 child: GestureDetector(
                                   onTap: () {
+                                    ref
+                                        .watch(currentPageProviders[index]
+                                            .notifier)
+                                        .state = 0;
+                                    ref
+                                        .watch(
+                                            selectedTimesheetPersonSupportedProvider[
+                                                    index]
+                                                .notifier)
+                                        .state = null;
+                                    ref
+                                        .watch(
+                                            selectedTimesheetPayComponentProvider[
+                                                    index]
+                                                .notifier)
+                                        .state = null;
                                     mTimeSheetDataListProvider
                                         .removeItem(snapshot.data![index]);
                                   },
@@ -603,25 +515,29 @@ class TimesheetItem extends ConsumerWidget {
   final int index;
   final TimesheetTimeModel? timesheetTimeModel;
   final GetTimesheetInitialErResponse? timesheetInitialErResponse;
+  final Map<String, List<PayComponentsModel>> subgroupLists;
 
   const TimesheetItem(
       {super.key,
       required this.index,
       required this.timesheetTimeModel,
-      required this.timesheetInitialErResponse});
+      required this.timesheetInitialErResponse,
+      required this.subgroupLists});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timesheetHoursController = TimesheetHoursController(
-        timesheetTimeModel!.timesheetHoursModel!.length);
+    final mTimeSheetDataListProvider =
+        ref.watch(timeSheetDataListProvider.notifier);
+    final timesheetHoursController =
+        TimesheetHoursController(mTimeSheetDataListProvider.state.length);
+
+    ///TODO this is wrong this should not timesheetTimeModel!.timesheetHoursModel!.length
     for (int i = 0; i < timesheetTimeModel!.timesheetHoursModel!.length; i++) {
       currentPageProviders.add(StateProvider<int>((ref) => 0));
       selectedTimesheetPersonSupportedProvider
           .add(StateProvider<EmployeeModel?>((ref) => null));
       selectedTimesheetPayComponentProvider
           .add(StateProvider<PayComponentsModel?>((ref) => null));
-      // selectedTimesheetSelectedHoursProvider.
-      //     .add(StateProvider<double?>((ref) => null));
     }
     final selectedTimesheetPersonSupportedState =
         ref.watch(selectedTimesheetPersonSupportedProvider[index].notifier);
@@ -686,11 +602,11 @@ class TimesheetItem extends ConsumerWidget {
                       value: selectedTimesheetPayComponentState.state?.name ??
                           "Choose",
                       onPress: () {
-                        BottomSheetGenericModal.show<PayComponentsModel?>(
+                        BottomSheetGenericExpansionModal.show<
+                            PayComponentsModel?>(
                           context,
                           "Choose Pay Component",
-                          timesheetInitialErResponse?.response?.payComponenets,
-                          selectedTimesheetPayComponentState.state,
+                          subgroupLists,
                           (item) => item!.name!,
                           (item) {
                             ref
@@ -785,13 +701,254 @@ class TimesheetItem extends ConsumerWidget {
   }
 }
 
-class ExpenseSheetItem extends ConsumerWidget {
-  final int index;
+class ExpenseBlock extends HookConsumerWidget {
+  const ExpenseBlock({super.key, required this.scrollToNewItem});
 
-  const ExpenseSheetItem({super.key, required this.index});
+  final Function(int) scrollToNewItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(timesheetViewModelProvider);
+    final userDetails = ref.watch(userDetailsProvider);
+    final selectedTimesheetFortnightState =
+        ref.watch(selectedTimesheetFortnightProvider.notifier);
+    final selectedTimesheetPayeeState =
+        ref.watch(selectedTimesheetPayeeProvider.notifier);
+    final mExpenseSheetDataListProvider =
+        ref.watch(expenseSheetDataListProvider.notifier);
+    GetUpdateTimesheetResponse? updateTimesheetResponse;
+    GetTimesheetInitialErResponse? getTimesheetInitialErResponse;
+
+    Map<String, List<ExpensePayeeListModel>> groupList = {};
+    Map<String, List<ExpenseTypeModel>> groupListExpenseType = {};
+
+    void addNewExpenseItem() {
+      mExpenseSheetDataListProvider.addItem(ExpenseItemModel(
+          personSupported: "",
+          date: "",
+          amount: "",
+          expenseType: "",
+          hour: "",
+          particulars: "",
+          invoiceImage: ""));
+
+      scrollToNewItem(mExpenseSheetDataListProvider.state.length * 3);
+    }
+
+    void getTimesheetInitialsEr() async {
+      context.showProgressDialog();
+      await viewModel.getTimesheetInitialsErExpense({
+        ApiParamKeys.KEY_USER_ID: userDetails?.userId ?? "",
+        ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
+        ApiParamKeys.KEY_EMPLOYEE_ID_SMALL:
+            selectedTimesheetPayeeState.state?.id ?? "",
+        ApiParamKeys.KEY_ROLE_CODE: userDetails?.roleCode ?? "",
+        ApiParamKeys.KEY_IS_SELF_MANAGED: userDetails?.isSelfManaged ?? false
+      });
+
+      if (context.mounted) context.pop();
+    }
+
+    useEffect(() {
+      final subscription = viewModel.responseUpdateTimesheetExpenseStream
+          .listen((response) async {
+        if (response.data?.status == true) {
+          updateTimesheetResponse = response.data;
+          getTimesheetInitialsEr();
+        }
+      });
+
+      return subscription.cancel;
+    }, const []);
+
+    useEffect(() {
+      final subscription = viewModel.responseTimesheetInitialsErExpenseStream
+          .listen((response) async {
+        if (response.data?.status == true) {
+          getTimesheetInitialErResponse = response.data;
+          List<ExpensePayeeListModel>? model =
+              response.data?.response?.expensePayeeList;
+          console("groupList: ${model?.length}");
+          for (var item in model ?? []) {
+            String subgroup = item.subGroup ?? "";
+            if (!groupList.containsKey(subgroup)) {
+              groupList[subgroup] = [];
+            }
+            groupList[subgroup]?.add(item);
+          }
+          List<ExpenseTypeModel>? modelExpenseType =
+              response.data?.response?.expenseType;
+          console("modelExpenseType: ${model?.length}");
+          for (var item in modelExpenseType ?? []) {
+            String subgroup = item.subGroup ?? "";
+            if (!groupListExpenseType.containsKey(subgroup)) {
+              groupListExpenseType[subgroup] = [];
+            }
+            groupListExpenseType[subgroup]?.add(item);
+          }
+          groupListExpenseType.forEach((subgroup, items) {
+            console("groupListExpenseType: $subgroup");
+            for (var item in items) {
+              console("groupList : item -> ${item.name}");
+            }
+          });
+          addNewExpenseItem();
+        }
+      });
+
+      return subscription.cancel;
+    }, const []);
+
+    return Column(
+      children: [
+        const SizedBox(
+          height: 32,
+        ),
+        SectionTitle(
+          title: "Expense Sheet",
+          isAddButton: true,
+          callbackAction: () async {
+            if (selectedTimesheetPayeeState.state == null ||
+                selectedTimesheetFortnightState.state == null) {
+              context.showErrorDialog(
+                  "Choose Payee and than select the fortnight to proceed",
+                  title: "To be noted!");
+              return;
+            }
+            if (updateTimesheetResponse == null) {
+              context.showProgressDialog();
+              await viewModel.updateTimesheetExpense({
+                ApiParamKeys.KEY_USER_ID: userDetails?.userId ?? "",
+                ApiParamKeys.KEY_USER_ROLE_CAP: userDetails?.roleCode ?? "",
+                ApiParamKeys.KEY_TIMESHEET_ID: 0,
+                ApiParamKeys.KEY_STATUS_CODE: "N",
+                ApiParamKeys.KEY_TRANSACTION_PERIOD_ID:
+                    selectedTimesheetFortnightState.state?.id ?? "",
+                ApiParamKeys.KEY_EMPLOYER_ID_CAP: userDetails?.employerId ?? "",
+                ApiParamKeys.KEY_EMPLOYEE_ID:
+                    selectedTimesheetPayeeState.state?.id ?? "",
+              });
+              if (context.mounted) {
+                context.pop();
+              }
+            } else {
+              addNewExpenseItem();
+            }
+          },
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        StreamBuilder<List<ExpenseItemModel>>(
+          stream: mExpenseSheetDataListProvider.stream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.isNotEmpty) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(0),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      for (int i = 0;
+                          i < mExpenseSheetDataListProvider.state.length;
+                          i++) {
+                        selectedTimesheetExpensePersonSupportedProvider
+                            .add(StateProvider<EmployeeModel?>((ref) => null));
+                        selectedTimesheetExpenseDateProvider
+                            .add(StateProvider<DateTime?>((ref) => null));
+
+                        selectedTimesheetExpenseExpensePayeeProvider.add(
+                            StateProvider<ExpensePayeeListModel?>(
+                                (ref) => null));
+
+                        selectedTimesheetExpenseTypeProvider.add(
+                            StateProvider<ExpenseTypeModel?>((ref) => null));
+                      }
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ExpenseSheetItem(
+                            index: index,
+                            timesheetInitialErResponse:
+                                getTimesheetInitialErResponse,
+                            expenseItemModel:
+                                mExpenseSheetDataListProvider.state[index],
+                            expensePayeeList: groupList,
+                            expenseTypeList: groupListExpenseType,
+                          ),
+                          Positioned(
+                              bottom: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(
+                                    color: AppColors.primaryColor,
+                                    // Border color
+                                    width: 0.5, // Border width
+                                  ), // Border radius to make it rounded
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    mExpenseSheetDataListProvider
+                                        .removeItem(snapshot.data![index]);
+                                  },
+                                  child: Icon(
+                                    Icons.delete_outlined,
+                                    size: 24,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ))
+                        ],
+                      );
+                    });
+              } else {
+                return const NotFoundWidget(
+                    title: "Expense Sheet",
+                    iconData: Icons.document_scanner_rounded);
+              }
+            } else {
+              return const NotFoundWidget(
+                  title: "Expense Sheet",
+                  iconData: Icons.document_scanner_rounded);
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ExpenseSheetItem extends ConsumerWidget {
+  final int index;
+  final ExpenseItemModel? expenseItemModel;
+  final GetTimesheetInitialErResponse? timesheetInitialErResponse;
+  final Map<String, List<ExpensePayeeListModel>> expensePayeeList;
+  final Map<String, List<ExpenseTypeModel>> expenseTypeList;
+
+  const ExpenseSheetItem(
+      {super.key,
+      required this.index,
+      required this.expenseItemModel,
+      required this.timesheetInitialErResponse,
+      required this.expensePayeeList,
+      required this.expenseTypeList});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedTimesheetExpensePersonSupportedState = ref
+        .watch(selectedTimesheetExpensePersonSupportedProvider[index].notifier);
+
+    final selectedTimesheetExpenseDateState =
+        ref.watch(selectedTimesheetExpenseDateProvider[index].notifier);
+    final selectedTimesheetExpenseExpensePayeeState =
+        ref.watch(selectedTimesheetExpenseExpensePayeeProvider[index].notifier);
+
+    final selectedTimesheetExpenseTypeState =
+        ref.watch(selectedTimesheetExpenseTypeProvider[index].notifier);
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 16, top: 8),
@@ -803,67 +960,168 @@ class ExpenseSheetItem extends ConsumerWidget {
           width: 0.05, // Border width
         ), // Border radius to make it rounded
       ),
-      child: const Column(
+      child: Column(
         children: [
           Row(
             children: [
-              Expanded(
-                  child: DataChooseWidget(
-                title: "Person Supported",
-              )),
-              SizedBox(
+              StreamBuilder<EmployeeModel?>(
+                  stream: selectedTimesheetExpensePersonSupportedState.stream,
+                  builder: (context, snapshot) {
+                    return Expanded(
+                        child: DataChooseWidget(
+                      title: "Person Supported",
+                      value: selectedTimesheetExpensePersonSupportedState
+                              .state?.name ??
+                          "Choose",
+                      onPress: () {
+                        BottomSheetGenericModal.show<EmployeeModel?>(
+                          context,
+                          "Choose Person Supported",
+                          timesheetInitialErResponse?.response?.employee,
+                          selectedTimesheetExpensePersonSupportedState.state,
+                          (item) => item!.name!,
+                          (item) {
+                            ref
+                                .watch(
+                                    selectedTimesheetExpensePersonSupportedProvider[
+                                            index]
+                                        .notifier)
+                                .state = item;
+                          },
+                        );
+                      },
+                    ));
+                  }),
+              const SizedBox(
                 width: 10,
               ),
-              Expanded(
-                  child: DataChooseWidget(
-                title: "Pay Component",
-              )),
+              StreamBuilder<DateTime?>(
+                  stream: selectedTimesheetExpenseDateState.stream,
+                  builder: (context, snapshot) {
+                    return Expanded(
+                        child: DataChooseWidget(
+                      title: "Date",
+                      value: selectedTimesheetExpenseDateState.state
+                              ?.convertDateToMMDDYYYY() ??
+                          "Choose",
+                      onPress: () {
+                        customDatePicker(
+                          context,
+                          selectedTimesheetExpenseDateState.state
+                                  ?.convertDateToMMDDYYYY() ??
+                              DateTime.now().convertDateToMMDDYYYY(),
+                          (pickedTime) {
+                            console("pickedTime -> $pickedTime");
+                            ref
+                                .watch(
+                                    selectedTimesheetExpenseDateProvider[index]
+                                        .notifier)
+                                .state = pickedTime;
+                          },
+                        );
+                      },
+                    ));
+                  }),
             ],
           ),
 
           /// show date view
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           Row(
             children: [
               Expanded(
-                  child: DataChooseWidget(
+                  child: DataTextInputWidget(
                 title: "Amount",
+                controller: TextEditingController(),
+                onChanged: (e) {},
+                isEditing: true,
               )),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
-              Expanded(
-                  child: DataChooseWidget(
-                title: "Expense/Payee",
-              )),
+              StreamBuilder<ExpensePayeeListModel?>(
+                  stream: selectedTimesheetExpenseExpensePayeeState.stream,
+                  builder: (context, snapshot) {
+                    return Expanded(
+                        child: DataChooseWidget(
+                      title: "Expense/Payee",
+                      value: selectedTimesheetExpenseExpensePayeeState
+                              .state?.name ??
+                          "Choose",
+                      onPress: () {
+                        BottomSheetGenericExpansionModal.show<
+                            ExpensePayeeListModel?>(
+                          context,
+                          "Expense/Payee",
+                          expensePayeeList,
+                          (item) => item!.name!,
+                          (item) {
+                            ref
+                                .watch(
+                                    selectedTimesheetExpenseExpensePayeeProvider[
+                                            index]
+                                        .notifier)
+                                .state = item;
+                          },
+                        );
+                      },
+                    ));
+                  }),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
-          DataChooseWidget(
-            title: "Expense Type",
-          ),
-          SizedBox(
+          StreamBuilder<ExpenseTypeModel?>(
+              stream: selectedTimesheetExpenseTypeState.stream,
+              builder: (context, snapshot) {
+                return DataChooseWidget(
+                  title: "Expense Type",
+                  value:
+                      selectedTimesheetExpenseTypeState.state?.name ?? "Choose",
+                  onPress: () {
+                    BottomSheetGenericExpansionModal.show<ExpenseTypeModel?>(
+                      context,
+                      "Expense Type",
+                      expenseTypeList,
+                      (item) => item!.name!,
+                      (item) {
+                        ref
+                            .watch(selectedTimesheetExpenseTypeProvider[index]
+                                .notifier)
+                            .state = item;
+                      },
+                    );
+                  },
+                );
+              }),
+
+          const SizedBox(
             height: 8,
           ),
-          DataChooseWidget(
+          DataTextInputWidget(
             title: "Hour",
+            controller: TextEditingController(),
+            onChanged: (e) {},
+            isEditing: true,
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
-          DataChooseWidget(
+          DataTextInputWidget(
             title: "Particulars",
+            controller: TextEditingController(),
+            onChanged: (e) {},
+            isEditing: true,
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
-          DataChooseWidget(
+          const DataChooseWidget(
             title: "Invoice Image",
           ),
         ],
@@ -872,13 +1130,225 @@ class ExpenseSheetItem extends ConsumerWidget {
   }
 }
 
-class PaymentsItem extends ConsumerWidget {
-  final int index;
+class PaymentBlock extends HookConsumerWidget {
+  const PaymentBlock({super.key, required this.scrollToNewItem});
 
-  const PaymentsItem({super.key, required this.index});
+  final Function(int) scrollToNewItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(timesheetViewModelProvider);
+    final userDetails = ref.watch(userDetailsProvider);
+    final selectedTimesheetFortnightState =
+        ref.watch(selectedTimesheetFortnightProvider.notifier);
+    final mPaymentsSheetDataListProvider =
+        ref.watch(paymentsSheetDataListProvider.notifier);
+    final selectedTimesheetPayeeState =
+        ref.watch(selectedTimesheetPayeeProvider.notifier);
+    GetUpdateTimesheetResponse? updateTimesheetResponse;
+    GetTimesheetInitialErResponse? getTimesheetInitialErResponse;
+    Map<String, List<ExpensePayeeListModel>> providerNameList = {};
+
+    void addNewExpenseItem() {
+      mPaymentsSheetDataListProvider.addItem(PaymentsItemModel(
+          personSupported: "",
+          date: "",
+          amount: "",
+          customerNo: "",
+          invoiceNo: "",
+          providerName: "",
+          invoiceImage: ""));
+
+      scrollToNewItem(mPaymentsSheetDataListProvider.state.length * 3);
+    }
+
+    void getTimesheetInitialsEr() async {
+      context.showProgressDialog();
+      await viewModel.getTimesheetInitialsErPayment({
+        ApiParamKeys.KEY_USER_ID: userDetails?.userId ?? "",
+        ApiParamKeys.KEY_EMPLOYER_ID: userDetails?.employerId ?? "",
+        ApiParamKeys.KEY_EMPLOYEE_ID_SMALL:
+            selectedTimesheetPayeeState.state?.id ?? "",
+        ApiParamKeys.KEY_ROLE_CODE: userDetails?.roleCode ?? "",
+        ApiParamKeys.KEY_IS_SELF_MANAGED: userDetails?.isSelfManaged ?? false
+      });
+
+      if (context.mounted) context.pop();
+    }
+
+    useEffect(() {
+      final subscription = viewModel.responseUpdateTimesheetPaymentStream
+          .listen((response) async {
+        if (response.data?.status == true) {
+          updateTimesheetResponse = response.data;
+          getTimesheetInitialsEr();
+        }
+      });
+
+      return subscription.cancel;
+    }, const []);
+
+    useEffect(() {
+      final subscription = viewModel
+          .responseTimesheetInitialsExpensePaymentStream
+          .listen((response) async {
+        if (response.data?.status == true) {
+          getTimesheetInitialErResponse = response.data;
+          List<ExpensePayeeListModel>? model =
+              response.data?.response?.expensePayeeList;
+
+          for (var item in model ?? []) {
+            String subgroup = item.subGroup ?? "";
+            if (!providerNameList.containsKey(subgroup)) {
+              providerNameList[subgroup] = [];
+            }
+            providerNameList[subgroup]?.add(item);
+          }
+          addNewExpenseItem();
+        }
+      });
+
+      return subscription.cancel;
+    }, const []);
+
+    return Column(
+      children: [
+        const SizedBox(
+          height: 32,
+        ),
+        SectionTitle(
+          title: "Payments",
+          isAddButton: true,
+          callbackAction: () async {
+            if (selectedTimesheetPayeeState.state == null ||
+                selectedTimesheetFortnightState.state == null) {
+              context.showErrorDialog(
+                  "Choose Payee and than select the fortnight to proceed",
+                  title: "To be noted!");
+              return;
+            }
+            if (updateTimesheetResponse == null) {
+              context.showProgressDialog();
+              await viewModel.updateTimesheetPayment({
+                ApiParamKeys.KEY_USER_ID: userDetails?.userId ?? "",
+                ApiParamKeys.KEY_USER_ROLE_CAP: userDetails?.roleCode ?? "",
+                ApiParamKeys.KEY_TIMESHEET_ID: 0,
+                ApiParamKeys.KEY_STATUS_CODE: "N",
+                ApiParamKeys.KEY_TRANSACTION_PERIOD_ID:
+                    selectedTimesheetFortnightState.state?.id ?? "",
+                ApiParamKeys.KEY_EMPLOYER_ID_CAP: userDetails?.employerId ?? "",
+                ApiParamKeys.KEY_EMPLOYEE_ID:
+                    selectedTimesheetPayeeState.state?.id ?? "",
+              });
+              if (context.mounted) {
+                context.pop();
+              }
+            } else {
+              addNewExpenseItem();
+            }
+          },
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        StreamBuilder<List<PaymentsItemModel>>(
+          stream: mPaymentsSheetDataListProvider.stream,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.isNotEmpty) {
+                return ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(0),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data?.length,
+                    itemBuilder: (context, index) {
+                      for (int i = 0;
+                          i < mPaymentsSheetDataListProvider.state.length;
+                          i++) {
+                        selectedTimesheetPaymentPersonSupportedProvider
+                            .add(StateProvider<EmployeeModel?>((ref) => null));
+                        selectedTimesheetPaymentsDateProvider
+                            .add(StateProvider<DateTime?>((ref) => null));
+                        selectedTimesheetPaymentsProviderNameProvider.add(
+                            StateProvider<ExpensePayeeListModel?>(
+                                (ref) => null));
+                      }
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          PaymentsItem(
+                            index: index,
+                            timesheetInitialErResponse:
+                                getTimesheetInitialErResponse,
+                            paymentsItemModel:
+                                mPaymentsSheetDataListProvider.state[index],
+                            providerNameList: providerNameList,
+                          ),
+                          Positioned(
+                              bottom: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(
+                                    color: AppColors.primaryColor,
+                                    // Border color
+                                    width: 0.5, // Border width
+                                  ), // Border radius to make it rounded
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    mPaymentsSheetDataListProvider
+                                        .removeItem(snapshot.data![index]);
+                                  },
+                                  child: Icon(
+                                    Icons.delete_outlined,
+                                    size: 24,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ))
+                        ],
+                      );
+                    });
+              } else {
+                return const NotFoundWidget(
+                    title: "Payment", iconData: Icons.payment);
+              }
+            } else {
+              return const NotFoundWidget(
+                  title: "Payment", iconData: Icons.payment);
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class PaymentsItem extends ConsumerWidget {
+  final int index;
+  final PaymentsItemModel? paymentsItemModel;
+  final GetTimesheetInitialErResponse? timesheetInitialErResponse;
+  final Map<String, List<ExpensePayeeListModel>> providerNameList;
+
+  const PaymentsItem(
+      {super.key,
+      required this.index,
+      required this.paymentsItemModel,
+      required this.timesheetInitialErResponse,
+      required this.providerNameList});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedPaymentPersonSupportedState = ref
+        .watch(selectedTimesheetPaymentPersonSupportedProvider[index].notifier);
+    final selectedPaymentDateState =
+        ref.watch(selectedTimesheetPaymentsDateProvider[index].notifier);
+    final selectedPaymentProviderNameState = ref
+        .watch(selectedTimesheetPaymentsProviderNameProvider[index].notifier);
+
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 16, top: 8),
@@ -890,56 +1360,137 @@ class PaymentsItem extends ConsumerWidget {
           width: 0.05, // Border width
         ), // Border radius to make it rounded
       ),
-      child: const Column(
+      child: Column(
         children: [
-          DataChooseWidget(
-            title: "Person Supported",
-          ),
+          StreamBuilder<EmployeeModel?>(
+              stream: selectedPaymentPersonSupportedState.stream,
+              builder: (context, snapshot) {
+                return DataChooseWidget(
+                  title: "Person Supported",
+                  value: selectedPaymentPersonSupportedState.state?.name ??
+                      "Choose",
+                  onPress: () {
+                    BottomSheetGenericModal.show<EmployeeModel?>(
+                      context,
+                      "Choose Person Supported",
+                      timesheetInitialErResponse?.response?.employee,
+                      selectedPaymentPersonSupportedState.state,
+                      (item) => item!.name!,
+                      (item) {
+                        ref
+                            .watch(
+                                selectedTimesheetPaymentPersonSupportedProvider[
+                                        index]
+                                    .notifier)
+                            .state = item;
+                      },
+                    );
+                  },
+                );
+              }),
 
           /// show date view
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           Row(
             children: [
-              Expanded(
-                  child: DataChooseWidget(
-                title: "Date",
-              )),
-              SizedBox(
+              StreamBuilder<DateTime?>(
+                  stream: selectedPaymentDateState.stream,
+                  builder: (context, snapshot) {
+                    return Expanded(
+                        child: DataChooseWidget(
+                      title: "Date",
+                      value: selectedPaymentDateState.state
+                              ?.convertDateToMMDDYYYY() ??
+                          "Choose",
+                      onPress: () {
+                        customDatePicker(
+                          context,
+                          selectedPaymentDateState.state
+                                  ?.convertDateToMMDDYYYY() ??
+                              DateTime.now().convertDateToMMDDYYYY(),
+                          (pickedTime) {
+                            console("pickedTime -> $pickedTime");
+                            ref
+                                .watch(
+                                    selectedTimesheetPaymentsDateProvider[index]
+                                        .notifier)
+                                .state = pickedTime;
+                          },
+                        );
+                      },
+                    ));
+                  }),
+              const SizedBox(
                 width: 10,
               ),
               Expanded(
-                  child: DataChooseWidget(
+                  child: DataTextInputWidget(
                 title: "Amount",
+                controller: TextEditingController(),
+                onChanged: (String value) {},
+                isEditing: true,
               )),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
-          DataChooseWidget(
-            title: "Provider Name",
-          ),
-          SizedBox(
+
+          StreamBuilder<ExpensePayeeListModel?>(
+              stream: selectedPaymentProviderNameState.stream,
+              builder: (context, snapshot) {
+                return DataChooseWidget(
+                  title: "Provider Name",
+                  value:
+                      selectedPaymentProviderNameState.state?.name ?? "Choose",
+                  onPress: () {
+                    BottomSheetGenericExpansionModal.show<
+                        ExpensePayeeListModel?>(
+                      context,
+                      "Provider Name",
+                      providerNameList,
+                      (item) => item!.name!,
+                      (item) {
+                        ref
+                            .watch(
+                                selectedTimesheetPaymentsProviderNameProvider[
+                                        index]
+                                    .notifier)
+                            .state = item;
+                      },
+                    );
+                  },
+                );
+              }),
+
+          const SizedBox(
             height: 8,
           ),
-          DataChooseWidget(
+          DataTextInputWidget(
             title: "Customer No.",
+            controller: TextEditingController(),
+            onChanged: (String value) {},
+            isEditing: true,
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
-          DataChooseWidget(
+          DataTextInputWidget(
             title: "Invoice No.",
+            controller: TextEditingController(),
+            onChanged: (String value) {},
+            isEditing: true,
           ),
 
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           DataChooseWidget(
             title: "Invoice Image",
+            onPress: () {},
           ),
         ],
       ),
@@ -1028,7 +1579,6 @@ class DateViewWidget extends ConsumerWidget {
                             BottomSheetChooseHoursModal.show(
                                 context,
                                 (p0) => () {
-                                      console("message -> $p0");
                                       ref
                                           .watch(hoursController
                                               .selectedTimesheetSelectedHoursProviders[

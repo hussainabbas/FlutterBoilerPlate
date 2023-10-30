@@ -19,3 +19,44 @@ class TimesheetHoursModel {
 
   TimesheetHoursModel({this.date, this.hours});
 }
+
+class ExpenseItemModel {
+  String? personSupported;
+  String? date;
+  String? amount;
+  String? expenseOrPayee;
+  String? expenseType;
+  String? hour;
+  String? particulars;
+  String? invoiceImage;
+
+  ExpenseItemModel({
+    this.personSupported,
+    this.date,
+    this.amount,
+    this.expenseType,
+    this.hour,
+    this.particulars,
+    this.invoiceImage,
+  });
+}
+
+class PaymentsItemModel {
+  String? personSupported;
+  String? date;
+  String? amount;
+  String? providerName;
+  String? customerNo;
+  String? invoiceNo;
+  String? invoiceImage;
+
+  PaymentsItemModel({
+    this.personSupported,
+    this.date,
+    this.amount,
+    this.providerName,
+    this.customerNo,
+    this.invoiceNo,
+    this.invoiceImage,
+  });
+}

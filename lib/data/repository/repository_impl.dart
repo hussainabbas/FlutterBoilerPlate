@@ -12,6 +12,7 @@ import 'package:manawanui/data/models/get_employer_client_list_response.dart';
 import 'package:manawanui/data/models/get_funding_support_plan_start_date_response.dart';
 import 'package:manawanui/data/models/get_mail_count_response.dart';
 import 'package:manawanui/data/models/get_statement_new_response.dart';
+import 'package:manawanui/data/models/get_timesheet_detail_response.dart';
 import 'package:manawanui/data/models/get_timesheet_initials_er_response.dart';
 import 'package:manawanui/data/models/get_timesheet_response.dart';
 import 'package:manawanui/data/models/get_timesheet_transaction_periods_response.dart';
@@ -211,6 +212,16 @@ class RepositoryImpl implements Repository {
       ApiEndPoints.GET_TIMESHEET_INITIALS_ER,
       body,
       GetTimesheetInitialErResponse.fromJson,
+    );
+  }
+
+  @override
+  Future<ApiResult<GetTimesheetDetailResponse>> getTimesheetDetails(
+      Map<String, dynamic> body) async {
+    return await _networkOperations.post(
+      ApiEndPoints.GET_TIMESHEET_DETAIL,
+      body,
+      GetTimesheetDetailResponse.fromJson,
     );
   }
 }

@@ -39,10 +39,15 @@ class TimesheetInitialErResponse {
   List<EmployeeModel>? employee;
   List<PayComponentsModel>? payComponenets;
   List<ExpenseTypeModel>? expenseType;
+  List<ExpensePayeeListModel>? expensePayeeList;
   String? tobeNoted;
 
   TimesheetInitialErResponse(
-      {this.employee, this.payComponenets, this.expenseType, this.tobeNoted});
+      {this.employee,
+      this.payComponenets,
+      this.expenseType,
+      this.tobeNoted,
+      this.expensePayeeList});
 
   TimesheetInitialErResponse.fromJson(Map<String, dynamic> json) {
     if (json['Employee'] != null) {
@@ -63,6 +68,13 @@ class TimesheetInitialErResponse {
         expenseType!.add(ExpenseTypeModel.fromJson(v));
       });
     }
+
+    if (json['ExpensePayeeList'] != null) {
+      expensePayeeList = <ExpensePayeeListModel>[];
+      json['ExpensePayeeList'].forEach((v) {
+        expensePayeeList!.add(ExpensePayeeListModel.fromJson(v));
+      });
+    }
     tobeNoted = json['TobeNoted'];
   }
 
@@ -76,6 +88,11 @@ class TimesheetInitialErResponse {
     }
     if (expenseType != null) {
       data['ExpenseType'] = expenseType!.map((v) => v.toJson()).toList();
+    }
+
+    if (expensePayeeList != null) {
+      data['ExpensePayeeList'] =
+          expensePayeeList!.map((v) => v.toJson()).toList();
     }
     data['TobeNoted'] = tobeNoted;
     return data;
@@ -234,6 +251,51 @@ class ExpenseTypeModel {
       this.expensePayeeId});
 
   ExpenseTypeModel.fromJson(Map<String, dynamic> json) {
+    id = json['Id'];
+    name = json['Name'];
+    intId = json['intId'];
+    subGroup = json['SubGroup'];
+    selected = json['Selected'];
+    auxDate = json['AuxDate'];
+    accountTranslationId = json['accountTranslationId'];
+    expensePayeeId = json['ExpensePayeeId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Id'] = id;
+    data['Name'] = name;
+    data['intId'] = intId;
+    data['SubGroup'] = subGroup;
+    data['Selected'] = selected;
+    data['AuxDate'] = auxDate;
+    data['accountTranslationId'] = accountTranslationId;
+    data['ExpensePayeeId'] = expensePayeeId;
+    return data;
+  }
+}
+
+class ExpensePayeeListModel {
+  String? id;
+  String? name;
+  int? intId;
+  String? subGroup;
+  bool? selected;
+  Null? auxDate;
+  int? accountTranslationId;
+  int? expensePayeeId;
+
+  ExpensePayeeListModel(
+      {this.id,
+      this.name,
+      this.intId,
+      this.subGroup,
+      this.selected,
+      this.auxDate,
+      this.accountTranslationId,
+      this.expensePayeeId});
+
+  ExpensePayeeListModel.fromJson(Map<String, dynamic> json) {
     id = json['Id'];
     name = json['Name'];
     intId = json['intId'];
