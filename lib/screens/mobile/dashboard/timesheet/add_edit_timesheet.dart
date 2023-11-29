@@ -94,6 +94,8 @@ class AddEditTimeSheet extends HookConsumerWidget {
         selectedTimesheetExpenseTypeProvider.clear();
         selectedTimesheetExpenseExpensePayeeProvider.clear();
         selectedTimesheetExpensePersonSupportedProvider.clear();
+        selectedTimesheetPaymentsDateProvider.clear();
+        selectedTimesheetPaymentsProviderNameProvider.clear();
 
         ref.invalidateTimeSheetProviders();
         return true;
@@ -109,7 +111,8 @@ class AddEditTimeSheet extends HookConsumerWidget {
           selectedTimesheetExpenseTypeProvider.clear();
           selectedTimesheetExpenseExpensePayeeProvider.clear();
           selectedTimesheetExpensePersonSupportedProvider.clear();
-
+          selectedTimesheetPaymentsDateProvider.clear();
+          selectedTimesheetPaymentsProviderNameProvider.clear();
           ref.invalidateTimeSheetProviders();
           context.pop();
         }, timesheetItemModel == null ? "Add Timesheet" : "Edit Timesheet",
