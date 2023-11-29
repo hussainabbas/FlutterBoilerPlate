@@ -1496,7 +1496,6 @@ class PayeeDetailsWidget extends ConsumerWidget {
           ),
 
         ///SELECTED PAYEE DOCUMENTS
-
         PayeeSelectedDocumentsWidget(employee: employee, isEditing: isEditing),
       ],
     );

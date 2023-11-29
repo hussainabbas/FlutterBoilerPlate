@@ -17,7 +17,11 @@ class ApiClient implements NetworkOperations {
     final options = BaseOptions(
       baseUrl: baseUrl,
       headers: {
-        // Your headers here
+        "Content-Type": "application/x-www-form-urlencoded",
+        'Access-Control-Allow-Origin': "*",
+        'Access-Control-Allow-Methods': "GET, HEAD, POST, OPTIONS",
+        'Access-Control-Allow-Headers':
+            'Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale,Access-Control-Allow-Origin, Accept'
       },
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
