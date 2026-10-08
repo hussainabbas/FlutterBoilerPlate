@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "1081762225832",
+    "firebase_url": "https://manawanui-in-charge-limited.firebaseio.com",
+    "project_id": "manawanui-in-charge-limited",
+    "storage_bucket": "manawanui-in-charge-limited.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081762225832:android:fb3d6d08a984e9d2",
+        "android_client_info": {
+          "package_name": "ifisol.manawanui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081762225832-gc4g47vhurmhhc447nua24hgsdlsgu4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUdrZfbB-2U35QFFlnBQiww1PhwaZeJC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081762225832-gc4g47vhurmhhc447nua24hgsdlsgu4j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1081762225832-lvots6ubackamjlc3dvjrgq8plfb9fad.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ifisol.Manawanui"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1081762225832:android:add26943045cdf6ef2ac9d",
+        "android_client_info": {
+          "package_name": "ifisol.manawanui.uat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1081762225832-gc4g47vhurmhhc447nua24hgsdlsgu4j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUdrZfbB-2U35QFFlnBQiww1PhwaZeJC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1081762225832-gc4g47vhurmhhc447nua24hgsdlsgu4j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1081762225832-lvots6ubackamjlc3dvjrgq8plfb9fad.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ifisol.Manawanui"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

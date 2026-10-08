@@ -1,0 +1,9 @@
+development:
+  flavorName: Dev
+  baseUrl: https://dev.example.com/api/
+staging:
+  flavorName: staging
+  baseUrl: https://staging.example.com/api/
+production:
+  flavorName: prod
+  baseUrl: https://example.com/api/
